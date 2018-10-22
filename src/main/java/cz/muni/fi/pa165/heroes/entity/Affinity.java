@@ -43,4 +43,23 @@ public class Affinity {
         if (level <= 0) throw new IllegalArgumentException("Affinity level must be greater than zero.");
         this.level = level;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof  Affinity)) return false;
+
+        Affinity affinity = (Affinity) o;
+
+        if (getLevel() != affinity.getLevel()) return false;
+        return getName().equals(affinity.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getLevel();
+        return result;
+    }
 }

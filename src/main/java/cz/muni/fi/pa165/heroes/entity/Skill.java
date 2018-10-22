@@ -47,4 +47,26 @@ public class Skill {
     public void setBaseDamage(int baseDamage) {
         this.baseDamage = baseDamage;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof Skill)) return false;
+
+        Skill skill = (Skill) o;
+
+        if (getBaseDamage() != skill.getBaseDamage()) return false;
+        if (!getName().equals(skill.getName())) return false;
+        return getEffects() != null ? getEffects().equals(skill.getEffects()) : skill.getEffects() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + (getEffects() != null ? getEffects().hashCode() : 0);
+        result = 31 * result + getBaseDamage();
+        return result;
+    }
 }
