@@ -4,8 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Skill is a named group of affinities usable by Hero.
+ */
 @Entity
 public class Skill {
 

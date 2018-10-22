@@ -2,6 +2,12 @@ package cz.muni.fi.pa165.heroes.entity;
 
 import javax.persistence.*;
 
+/**
+ * Actor class describes common properties of entities capable of dying and dealing damage.
+ * For example: Heroes, Monsters or Items.
+ * Each class deriving from Actor will have its inherited attributes in its table,
+ * to prevent confusion and avoid unnecessary table joins on entity fetch.
+ */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
 public abstract class Actor {

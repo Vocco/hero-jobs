@@ -4,6 +4,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Affinity describes a relation of an actor to an effect of a skill.
+ *
+ * Consider a following scenario:
+ * Monster is weak to fire, therefore affinity with a name fire is in its weakness list.
+ * Hero whose skillset contains a skill with a fire affinity will be more likely to be
+ * recommended to join the quest regarding this monster.
+ */
 @Entity
 public class Affinity {
 
