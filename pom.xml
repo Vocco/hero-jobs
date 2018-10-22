@@ -47,19 +47,24 @@
 
     <dependency>
       <groupId>javax.inject</groupId>
-      <artifactId>inject-api</artifactId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
     </dependency>
 
     <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>persistence-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>hibernate</groupId>
+      <groupId>org.hibernate</groupId>
       <artifactId>hibernate</artifactId>
       <version>3.0.5</version>
+
+      <!-- This could not be found, apparently there are some license issues - we'll see if it's even needed. -->
+      <exclusions>  
+         <exclusion>  
+           <groupId>javax.transaction</groupId>  
+           <artifactId>jta</artifactId>  
+         </exclusion>  
+       </exclusions>
     </dependency>
+
     <dependency>
       <groupId>javax.persistence</groupId>
       <artifactId>javax.persistence-api</artifactId>
