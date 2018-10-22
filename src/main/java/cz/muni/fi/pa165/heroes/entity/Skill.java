@@ -37,7 +37,7 @@ public class Skill {
     }
 
     public List<Affinity> getEffects() {
-        return effects;
+        return Collections.unmodifiableList(effects);
     }
 
     public int getBaseDamage() {
