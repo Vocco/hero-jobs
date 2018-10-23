@@ -129,13 +129,10 @@ public class Quest {
 
         int index = monsters.indexOf(questMonster);
         if (index == -1) {
-          throw new UnsupportedOperationException("Not implemented yet, waiting for monster::assignToQuest");
-          // TODO: Prepare monster so that it can add a questMonster to its quests list
-          // This can be uncommented when monster::assignToQuest has been implemented.
-          // monsters.add(questMonster);
-          // monster.assignToQuest(questMonster);			
+            monsters.add(questMonster);
+            monster.assignToQuest(questMonster);
         } else {
-          monsters.get(index).increaseCount();
+            monsters.get(index).increaseCount();
         }
     }
 
@@ -177,15 +174,12 @@ public class Quest {
             if (questMonster.getQuest().equals(this) && questMonster.getMonster().equals(monster)) {
 
                 if (questMonster.getMonsterCount() <= 0) {
-                    throw new UnsupportedOperationException("Not implemented, waiting for monster::removeFromQuest");
-                    // TODO: Prepare monster so that it can remove a questMonster from its quests list
-                    // This can be uncommented when monster::removeFromQuest has been implemented.
-                    // iter.remove();
-                    // questMonster.getMonster().removeFromQuest(questMonster);
-                    // questMonster.setQuest(null);
-                    // questMonster.setMonster(null);	
+                    iter.remove();
+                    questMonster.getMonster().removeFromQuest(questMonster);
+                    questMonster.setQuest(null);
+                    questMonster.setMonster(null);	
                 } else {
-                  questMonster.decreaseCount();
+                    questMonster.decreaseCount();
                 }
 
                 break;
