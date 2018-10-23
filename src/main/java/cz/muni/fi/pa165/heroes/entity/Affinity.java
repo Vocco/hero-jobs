@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.heroes.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -16,11 +17,19 @@ import javax.persistence.Id;
 public class Affinity {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column(nullable = false)
     private String name;
     private int level;
+
+    public Affinity() {}
+
+    public Affinity(String name, int level) {
+        this.setName(name);
+        this.setLevel(level);
+    }
 
     public Long getId() {
         return id;
@@ -61,5 +70,10 @@ public class Affinity {
         int result = getName().hashCode();
         result = 31 * result + getLevel();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Affinity: %d\n\tname: %s\n\tlevel: %d\n", getId(), getName(), getLevel());
     }
 }
