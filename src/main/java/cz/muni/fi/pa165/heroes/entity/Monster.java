@@ -69,6 +69,15 @@ public class Monster extends Actor {
         }
     }
 
+
+    public void removeWeakness(Affinity oldWeakness){
+        weaknesses.remove(oldWeakness);
+    }
+
+    public void removeAllWeaknesses(){
+        weaknesses.clear();
+    }
+
     /**
      * if not already in list adds new strength to the strengths
      * @param nStrength
@@ -77,6 +86,14 @@ public class Monster extends Actor {
         if (!strengths.contains(nStrength)){
             strengths.add(nStrength);
         }
+    }
+
+    public void removeStrength(Affinity oldStrength){
+        strengths.remove(oldStrength);
+    }
+
+    public void removeAllStrengths(){
+        strengths.clear();
     }
 
     /**
@@ -105,7 +122,7 @@ public class Monster extends Actor {
     }
 
     public void setSize(String size) {
-        if (size == null) throw new IllegalArgumentException("Size of a monster can't be null");
+        if ( size == null ) throw new IllegalArgumentException("Size of a monster can't be null");
         this.size = size;
     }
 
@@ -114,7 +131,7 @@ public class Monster extends Actor {
     }
 
     public void setStrengths(List<Affinity> strengths) {
-        if (strengths.isEmpty()) throw new IllegalArgumentException("Strengths of monster cannot be set to empty list");
+        if ( strengths == null ) throw new IllegalArgumentException("Strengths of monster cannot be null");
         this.strengths = strengths;
     }
 
@@ -123,13 +140,13 @@ public class Monster extends Actor {
     }
 
     public void setWeaknesses(List<Affinity> weaknesses) {
-        if (weaknesses.isEmpty()) throw new IllegalArgumentException("Weaknesses of monster cannot be set to empty list");
+        if ( weaknesses == null ) throw new IllegalArgumentException("Weaknesses of monster cannot be null");
         this.weaknesses = weaknesses;
     }
 
     @Override
     public void setDamage(int damage) {
-        if (damage <= 0) throw new IllegalArgumentException("A monster must have more than 0 damage");
+        if ( damage <= 0 ) throw new IllegalArgumentException("A monster must have more than 0 damage");
         super.setDamage(damage);
     }
 
