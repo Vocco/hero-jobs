@@ -47,8 +47,15 @@ public class Monster extends Actor {
         setSize(size);
         setStrengths(strengths);
         setWeaknesses(weaknesses);
-
     }
+
+    public Monster(String name, int hitpoints, int damage, String size) {
+        setName(name);
+        setHitpoints(hitpoints);
+        setDamage(damage);
+        setSize(size);
+    }
+
 
     // PUBLIC METHODS
 
@@ -80,6 +87,15 @@ public class Monster extends Actor {
         if (!assignedToQuests.contains(questMonster)){
             assignedToQuests.add(questMonster);
         }
+    }
+
+    /**
+     * from various reasons we may want to remove assignment of monster to quest
+     * (quest deleted, failed, succesful)
+     * @param questMonster
+     */
+    public void removeFromQuest(QuestMonster questMonster){
+        assignedToQuests.remove(questMonster);
     }
 
     // GETTERS AND SETTERS
