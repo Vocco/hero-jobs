@@ -43,7 +43,6 @@ public class Monster extends Actor {
                    String size, List<Affinity> strengths, List<Affinity> weaknesses) {
         setName(name);
         setHitpoints(hitpoints);
-        if (damage <= 0) throw new IllegalArgumentException("A monster must have more than 0 damage");
         setDamage(damage);
         setSize(size);
         setStrengths(strengths);
@@ -112,6 +111,12 @@ public class Monster extends Actor {
         this.weaknesses = weaknesses;
     }
 
+    @Override
+    public void setDamage(int damage) {
+        if (damage <= 0) throw new IllegalArgumentException("A monster must have more than 0 damage");
+        super.setDamage(damage);
+    }
+
     // EQUALS AND HASH
 
     @Override
@@ -121,7 +126,7 @@ public class Monster extends Actor {
         if (!(o instanceof Monster)) return false;
 
         Monster monster = (Monster) o;
-        if (getName() != monster.getName() ||
+        if ( !getName().equals(monster.getName()) ||
                 getHitpoints() != monster.getHitpoints() ||
                 getDamage() != monster.getDamage())
             return false;
