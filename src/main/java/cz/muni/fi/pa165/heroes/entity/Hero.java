@@ -56,7 +56,12 @@ public class Hero extends Actor {
      * @param skill to add
      */
     public void learnSkill(Skill skill) {
-        skills.add(skill);
+		for (Skill learntSkill : skills) {
+			if (learntSkill.getName().equals(skill.getName())) {
+				skills.remove(learntSkill);
+			}
+		}
+		skills.add(skill);
     }
 
     /**
@@ -118,7 +123,11 @@ public class Hero extends Actor {
     }
 
     public void setQuest(Quest quest) {
-        this.quest = quest;
+    	if (getQuest() != null && getQuest().getQuestState() != QuestState.NEW) {
+		    throw new IllegalStateException("Hero can only be assigned to NEW quests.");
+	    }
+	    this.quest = quest;
+    	quest.addHero(this);
     }
 
     public List<Skill> getSkills() {
@@ -126,6 +135,7 @@ public class Hero extends Actor {
     }
 
     public void setSkills(List<Skill> skills) {
+	    if (skills == null) throw new IllegalArgumentException("Skills of a hero can't be null.");
         this.skills = skills;
     }
 
@@ -153,9 +163,31 @@ public class Hero extends Actor {
 
     @Override
     public String toString() {
-        return Hero.class + ": <" + getId() + ">\n<name>: <" + getName() + ">\n<hitpoints>: <" +
-                getHitpoints() + ">\n<damage>: <" + getDamage() + ">\n<gold>: <" + getGold() + ">\n<isAlive>: <"
-                + isAlive() + ">\n<might>: <" + getMight() + ">\n<agility>: <" + getAgility() + ">\n<magic>: <"
-                + getMight() + ">\n<quest>: <" + getQuest() + ">\n<skills>: <" + getSkills() + ">";
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(Hero.class);
+    	sb.append(": ");
+    	sb.append(getId());
+    	sb.append(", name: ");
+    	sb.append(getName());
+    	sb.append(", hitpoints: ");
+    	sb.append(getHitpoints());
+    	sb.append(", damage: ");
+    	sb.append(getDamage());
+    	sb.append(", gold: ");
+    	sb.append(getGold());
+    	sb.append(", isAlive: ");
+    	sb.append(isAlive());
+    	sb.append(", might: ");
+    	sb.append(getMight());
+    	sb.append(", agility: ");
+    	sb.append(getAgility());
+    	sb.append(", magic: ");
+    	sb.append(getMagic());
+    	sb.append(", quest: ");
+    	sb.append(getQuest());
+    	sb.append(", skills: ");
+    	sb.append(getSkills());
+
+        return sb.toString();
     }
 }
