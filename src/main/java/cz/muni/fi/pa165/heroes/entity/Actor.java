@@ -13,6 +13,7 @@ import javax.persistence.*;
 public abstract class Actor {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
