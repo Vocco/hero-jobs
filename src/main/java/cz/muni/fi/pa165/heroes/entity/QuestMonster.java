@@ -30,11 +30,11 @@ public class QuestMonster {
     @EmbeddedId
     private QuestMonsterId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("questId")
     private Quest quest;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("monsterId")
     private Monster monster;
 
