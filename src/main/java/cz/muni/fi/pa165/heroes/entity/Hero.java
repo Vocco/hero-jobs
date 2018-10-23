@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -123,11 +124,20 @@ public class Hero extends Actor {
     }
 
     public void setQuest(Quest quest) {
-    	if (getQuest() != null && getQuest().getQuestState() != QuestState.NEW) {
+    	if (quest.getQuestState() == QuestState.NEW) {
+		    if (getQuest() == null) {
+			    this.quest = quest;
+			    quest.addHero(this);
+		    } else if (getQuest().getQuestState() == QuestState.NEW) {
+			    getQuest().removeHero(this);
+		    	this.quest = quest;
+			    quest.addHero(this);
+		    } else {
+			    throw new IllegalStateException("Hero is already on a quest.");
+		    }
+	    } else {
 		    throw new IllegalStateException("Hero can only be assigned to NEW quests.");
 	    }
-	    this.quest = quest;
-    	quest.addHero(this);
     }
 
     public List<Skill> getSkills() {
@@ -139,7 +149,7 @@ public class Hero extends Actor {
         this.skills = skills;
     }
 
-    // EQUALS AND HASH
+    // EQUALS, HASH, TOSTRING
 
     @Override
     public boolean equals(Object o) {
@@ -163,30 +173,49 @@ public class Hero extends Actor {
 
     @Override
     public String toString() {
-    	StringBuilder sb = new StringBuilder();
-    	sb.append(Hero.class);
-    	sb.append(": ");
+    	StringBuilder sb = new StringBuilder("Class name: Hero");
+    	sb.append("\nid: ");
     	sb.append(getId());
-    	sb.append(", name: ");
+    	sb.append("\nname: ");
     	sb.append(getName());
-    	sb.append(", hitpoints: ");
+    	sb.append("\nhitpoints: ");
     	sb.append(getHitpoints());
-    	sb.append(", damage: ");
+    	sb.append("\ndamage: ");
     	sb.append(getDamage());
-    	sb.append(", gold: ");
+    	sb.append("\ngold: ");
     	sb.append(getGold());
-    	sb.append(", isAlive: ");
+    	sb.append("\nisAlive: ");
     	sb.append(isAlive());
-    	sb.append(", might: ");
+    	sb.append("\nmight: ");
     	sb.append(getMight());
-    	sb.append(", agility: ");
+    	sb.append("\nagility: ");
     	sb.append(getAgility());
-    	sb.append(", magic: ");
+    	sb.append("\nmagic: ");
     	sb.append(getMagic());
-    	sb.append(", quest: ");
-    	sb.append(getQuest());
-    	sb.append(", skills: ");
-    	sb.append(getSkills());
+
+    	sb.append("\nquest: ");
+	    if (quest != null) {
+	    	sb.append(getQuest());
+	    }
+	    else {
+	    	sb.append("N/A");
+	    }
+
+	    sb.append("\nskills: ");
+	    if (skills.size() != 0) {
+		    for (Iterator<Skill> iterator = skills.iterator(); iterator.hasNext(); ) {
+		    	Skill skill = iterator.next();
+
+			    sb.append(skill.getName());
+
+			    if (iterator.hasNext()) {
+				    sb.append(", ");
+			    }
+		    }
+
+	    } else {
+	    	sb.append("none");
+	    }
 
         return sb.toString();
     }
