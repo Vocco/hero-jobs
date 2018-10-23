@@ -124,20 +124,23 @@ public class Hero extends Actor {
     }
 
     public void setQuest(Quest quest) {
-    	if (quest.getQuestState() == QuestState.NEW) {
-		    if (getQuest() == null) {
-			    this.quest = quest;
-			    quest.addHero(this);
-		    } else if (getQuest().getQuestState() == QuestState.NEW) {
-			    getQuest().removeHero(this);
-		    	this.quest = quest;
-			    quest.addHero(this);
-		    } else {
-			    throw new IllegalStateException("Hero is already on a quest.");
-		    }
-	    } else {
+	    if (quest.getQuestState() != QuestState.NEW) {
 		    throw new IllegalStateException("Hero can only be assigned to NEW quests.");
 	    }
+
+    	if (getQuest() == null) {
+	    	this.quest = quest;
+	    	quest.addHero(this);
+	    	return;
+	    }
+
+	    if (getQuest().getQuestState() == QuestState.ONGOING) {
+	    	throw new IllegalStateException("Hero is already on a quest.");
+	    }
+
+	    getQuest().removeHero(this);
+	    this.quest = quest;
+	    quest.addHero(this);
     }
 
     public List<Skill> getSkills() {
