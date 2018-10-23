@@ -116,7 +116,7 @@ public class QuestMonster {
     }
 
 
-    // EQUALS AND HASH
+    // EQUALS, HASH, TOSTRING
 
     @Override
     public boolean equals(Object o) {
@@ -134,6 +134,30 @@ public class QuestMonster {
         return Objects.hash(quest, monster);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ClassName: QuestMonster");
+        sb.append("\nid:\n\n");
+        sb.append(id.toString());
+
+        sb.append("\n\nquest: ");
+        if (quest == null) {
+            sb.append("N/A");
+        } else {
+            sb.append(quest.getName());
+        }
+
+        if (monster == null) {
+            sb.append("\nmonster: N/A\nmonsterCount: N/A");
+        } else {
+            sb.append("\nmonster: ");
+            sb.append(monster.getName());
+            sb.append("\nmonsterCount: ");
+            sb.append(Integer.toString(monsterCount));
+        }
+
+        return sb.toString();
+    }
 
     // NESTED CLASSES
 
@@ -178,7 +202,7 @@ public class QuestMonster {
         }
 
 
-        // EQUALS AND HASH
+        // EQUALS, HASH, TOSTRING
 
         @Override
         public boolean equals(Object o) {
@@ -193,6 +217,16 @@ public class QuestMonster {
         @Override
         public int hashCode() {
             return Objects.hash(questId, monsterId);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("ClassName: QuestMonsterId");
+            sb.append("\nquestId: ");
+            sb.append(questId.toString());
+            sb.append("\nmonserId: ");
+            sb.append(monsterId.toString());
+            return sb.toString();
         }
     }
 }
