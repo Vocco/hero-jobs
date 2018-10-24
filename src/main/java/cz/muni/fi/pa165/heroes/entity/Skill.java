@@ -25,9 +25,10 @@ public class Skill {
     public Skill () {}
 
     public Skill(String name, List<Affinity> affinities, int baseDamage) {
-        this.name = name;
-        this.affinities = affinities;
-        this.baseDamage = baseDamage;
+        this.setName(name);
+        // If you ask why Affinity[0] see: https://shipilev.net/blog/2016/arrays-wisdom-ancients/
+        this.setAffinities(affinities.toArray(new Affinity[0]));
+        this.setBaseDamage(baseDamage);
     }
 
     public Long getId() {
