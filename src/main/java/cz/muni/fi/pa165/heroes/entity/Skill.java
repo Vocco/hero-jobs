@@ -1,9 +1,7 @@
 package cz.muni.fi.pa165.heroes.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,14 +12,24 @@ import java.util.List;
 public class Skill {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column(nullable = false)
     private String name;
 
     @OneToMany(targetEntity = Affinity.class)
-    private List<Affinity> effects;
+    private List<Affinity> affinities;
     private int baseDamage;
+
+    public Skill () {}
+
+    public Skill(String name, List<Affinity> affinities, int baseDamage) {
+        this.setName(name);
+        // If you ask why Affinity[0] see: https://shipilev.net/blog/2016/arrays-wisdom-ancients/
+        this.setAffinities(affinities.toArray(new Affinity[0]));
+        this.setBaseDamage(baseDamage);
+    }
 
     public Long getId() {
         return id;
@@ -36,8 +44,15 @@ public class Skill {
         this.name = name;
     }
 
-    public List<Affinity> getEffects() {
-        return Collections.unmodifiableList(effects);
+    public List<Affinity> getAffinities() {
+        return Collections.unmodifiableList(affinities);
+    }
+
+    public void setAffinities(Affinity... affinities) {
+        if (affinities == null) throw new IllegalArgumentException("Affinities can't be null");
+
+        this.affinities.clear();
+        this.affinities.addAll(Arrays.asList(affinities));
     }
 
     public int getBaseDamage() {
@@ -58,15 +73,21 @@ public class Skill {
 
         if (getBaseDamage() != skill.getBaseDamage()) return false;
         if (!getName().equals(skill.getName())) return false;
-        return getEffects() != null ? getEffects().equals(skill.getEffects()) : skill.getEffects() == null;
+        return getAffinities() != null ? getAffinities().equals(skill.getAffinities()) : skill.getAffinities() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getId().hashCode();
         result = 31 * result + getName().hashCode();
-        result = 31 * result + (getEffects() != null ? getEffects().hashCode() : 0);
+        result = 31 * result + (getAffinities() != null ? getAffinities().hashCode() : 0);
         result = 31 * result + getBaseDamage();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Skill: %d\n\tname: %s\n\tbaseDamage: %d\n\taffinities:\n%s\n",
+                getId(), getName(), getBaseDamage(), getAffinities());
     }
 }
