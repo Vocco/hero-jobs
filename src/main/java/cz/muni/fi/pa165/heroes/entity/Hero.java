@@ -138,7 +138,10 @@ public class Hero extends Actor {
 	    	throw new IllegalStateException("Hero is already on a quest.");
 	    }
 
-	    getQuest().removeHero(this);
+	    if (getQuest().getQuestState() == QuestState.NEW) {
+		    getQuest().removeHero(this);
+	    }
+	    
 	    this.quest = quest;
 	    quest.addHero(this);
     }
