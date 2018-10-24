@@ -129,13 +129,10 @@ public class Quest {
 
         int index = monsters.indexOf(questMonster);
         if (index == -1) {
-          throw new UnsupportedOperationException("Not implemented yet, waiting for monster::assignToQuest");
-          // TODO: Prepare monster so that it can add a questMonster to its quests list
-          // This can be uncommented when monster::assignToQuest has been implemented.
-          // monsters.add(questMonster);
-          // monster.assignToQuest(questMonster);			
+            monsters.add(questMonster);
+            monster.assignToQuest(questMonster);
         } else {
-          monsters.get(index).increaseCount();
+            monsters.get(index).increaseCount();
         }
     }
 
@@ -177,15 +174,12 @@ public class Quest {
             if (questMonster.getQuest().equals(this) && questMonster.getMonster().equals(monster)) {
 
                 if (questMonster.getMonsterCount() <= 0) {
-                    throw new UnsupportedOperationException("Not implemented, waiting for monster::removeFromQuest");
-                    // TODO: Prepare monster so that it can remove a questMonster from its quests list
-                    // This can be uncommented when monster::removeFromQuest has been implemented.
-                    // iter.remove();
-                    // questMonster.getMonster().removeFromQuest(questMonster);
-                    // questMonster.setQuest(null);
-                    // questMonster.setMonster(null);	
+                    iter.remove();
+                    questMonster.getMonster().removeFromQuest(questMonster);
+                    questMonster.setQuest(null);
+                    questMonster.setMonster(null);	
                 } else {
-                  questMonster.decreaseCount();
+                    questMonster.decreaseCount();
                 }
 
                 break;
@@ -282,7 +276,7 @@ public class Quest {
     }
 
 
-    // EQUALS AND HASH
+    // EQUALS, HASH, TOSTRING
 
     @Override
     public boolean equals(Object o) {
@@ -319,5 +313,84 @@ public class Quest {
         result = 11 * result + deadHeroes.hashCode();
         result = 11 * result + monsters.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ClassName: Quest");
+        sb.append("\nid: ");
+        sb.append(id.toString());
+        sb.append("\nname: ");
+        sb.append(name);
+        sb.append("\nlocation: ");
+        sb.append(location);
+        sb.append("\nreward: ");
+        sb.append(Integer.toString(reward));
+        sb.append("\nheroLimit: ");
+        sb.append(Integer.toString(heroLimit));
+        sb.append("\nstate: ");
+        sb.append(state.toString());
+        sb.append("\nperfomanceEvaluation: ");
+
+        if (state != QuestState.NEW && state != QuestState.ONGOING) {
+            sb.append(Integer.toString(performanceEvaluation));
+        } else {
+            sb.append("N/A");
+        }
+
+        sb.append("\nassignedHeroes: ");
+        if (assignedHeroes.size() != 0) {
+            appendHeroNames(assignedHeroes, sb);
+        } else {
+           sb.append("none");
+        }
+
+        sb.append("\ndeadHeroes: ");
+        if (deadHeroes.size() != 0) {
+            appendHeroNames(deadHeroes, sb);
+        } else {
+            sb.append("none");
+        }
+
+        sb.append("\nmonsters: ");
+        if (monsters.size() != 0) {
+            for (Iterator<QuestMonster> iter = monsters.iterator(); iter.hasNext(); ) {
+                QuestMonster questMonster = iter.next();
+
+                sb.append(questMonster.getMonster().getName());
+                sb.append(" (");
+                sb.append(Integer.toString(questMonster.getMonsterCount()));
+                sb.append(")");
+
+                if (iter.hasNext()) {
+                    sb.append(", ");
+                }
+            }
+        } else {
+            sb.append("none");
+        }
+
+        return sb.toString();
+    }
+
+
+    // PRIVATE HELPER METHODS
+
+    /**
+     * Appends to given {@link StringBuilder} a list of hero names from a {@Link List} of {@link Hero}es.
+     *
+     * @param heroes A {@link List} of {@link Hero}es to be parsed.
+     * @param sb A {@link StringBuilder} to which to append the comma (and space) separated list of hero names.
+     */
+    private void appendHeroNames(List<Hero> heroes, StringBuilder sb) {
+        for (Iterator<Hero> iter = heroes.iterator(); iter.hasNext(); ) {
+            Hero hero = iter.next();
+
+            sb.append(hero.getName());
+
+            if (iter.hasNext()) {
+                sb.append(", ");
+            }
+        }
     }
 }
