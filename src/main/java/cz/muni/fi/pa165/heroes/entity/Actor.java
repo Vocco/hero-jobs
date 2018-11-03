@@ -9,6 +9,8 @@ import javax.persistence.*;
  * For example: Heroes, Monsters or Items.
  * Each class deriving from Actor will have its inherited attributes in its table,
  * to prevent confusion and avoid unnecessary table joins on entity fetch.
+ *
+ * @author Michal Pavúk
  */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity

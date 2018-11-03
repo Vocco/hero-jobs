@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Skill is a named group of affinities usable by Hero.
+ *
+ * @author Michal Pavúk
  */
 @Entity
 public class Skill {
