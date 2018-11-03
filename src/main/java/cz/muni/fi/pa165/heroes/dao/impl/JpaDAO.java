@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.heroes.dao.impl;
 
 import cz.muni.fi.pa165.heroes.dao.DAO;
+import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -18,6 +19,7 @@ import javax.persistence.PersistenceContext;
  *
  * @param <T> A {@link Serializable} entity.
  */
+@Repository
 public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
 
@@ -33,7 +35,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
     public JpaDAO() {
         ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
-        entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[1];
+        entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
 
