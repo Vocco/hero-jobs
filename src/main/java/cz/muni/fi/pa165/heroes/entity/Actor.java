@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.heroes.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -10,7 +12,7 @@ import javax.persistence.*;
  */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
-public abstract class Actor {
+public abstract class Actor implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
