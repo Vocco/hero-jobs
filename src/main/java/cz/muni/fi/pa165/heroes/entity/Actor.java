@@ -17,7 +17,7 @@ import javax.persistence.*;
 public abstract class Actor implements Serializable {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
