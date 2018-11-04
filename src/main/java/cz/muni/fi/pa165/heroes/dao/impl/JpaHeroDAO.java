@@ -40,7 +40,7 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public List<Hero> findAlive() {
-        return livingHeroes = entityManager.createQuery("SELECT h FROM Hero h WHERE h.isAlive = TRUE", Hero.class)
+        return entityManager.createQuery("SELECT h FROM Hero h WHERE h.isAlive = TRUE", Hero.class)
             .getResultList();
     }
 
