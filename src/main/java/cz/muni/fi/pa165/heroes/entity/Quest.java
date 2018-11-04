@@ -61,9 +61,11 @@ public class Quest implements Serializable {
     private int performanceEvaluation;
 
     @OneToMany(targetEntity = Hero.class, fetch = FetchType.LAZY)
+    @JoinTable(name="quest_assignedheroes")
     private List<Hero> assignedHeroes = new ArrayList<>();
 
     @OneToMany(targetEntity = Hero.class, fetch = FetchType.LAZY)
+    @JoinTable(name="quest_deadheroes")
     private List<Hero> deadHeroes = new ArrayList<>();
 
     @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
