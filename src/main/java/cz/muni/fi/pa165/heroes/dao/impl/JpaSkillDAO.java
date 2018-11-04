@@ -16,6 +16,21 @@ public class JpaSkillDAO extends JpaDAO<Skill> implements SkillDAO {
 
 
     @Override
+    public List<Skill> findByName(String name) {
+        entityManager.getTransaction().begin();
+
+        List<Skill> skills = entityManager.createQuery("SELECT s FROM Skill s WHERE s.name = :name"
+                , Skill.class)
+                .setParameter("name", name)
+                .getResultList();
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+        return skills;
+    }
+
+    @Override
     public List<Skill> findWithAffinity(Affinity affinity) {
         entityManager.getTransaction().begin();
 

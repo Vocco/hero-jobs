@@ -13,15 +13,19 @@ import java.util.List;
  */
 public interface SkillDAO {
 
-    // findByName ???
-    // List<Skill> findByName();
+    /**
+     * Finds all {@link Skill}s with given name - note that name doesn't have to be unique
+     * @param name
+     * @return Finds all {@link Skill}s containing given {@link Affinity}
+     */
+    List<Skill> findByName(String name);
 
     /**
      * Finds all {@link Skill}s containing given {@link Affinity}
      *
      * @param affinity - {@link Affinity} needed
      *
-     * @return - {@link List} of {@link Skill}s which contains needed {@link Affinity}
+     * @return - c which contains needed {@link Affinity}
      */
     List<Skill> findWithAffinity(Affinity affinity);
 
