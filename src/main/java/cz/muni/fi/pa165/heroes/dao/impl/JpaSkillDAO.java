@@ -31,13 +31,6 @@ public class JpaSkillDAO extends JpaDAO<Skill> implements SkillDAO {
     }
 
     @Override
-    public List<Skill> findWithAffinities(List<Affinity> affinities) {
-
-
-        return null;
-    }
-
-    @Override
     public List<Skill> findWithBaseDamage(int baseDamage) {
         return findByBaseDamage(baseDamage, "=");
     }
