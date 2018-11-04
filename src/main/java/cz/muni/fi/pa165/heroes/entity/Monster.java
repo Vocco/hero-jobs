@@ -26,9 +26,11 @@ public class Monster extends Actor {
     private String size;
 
     @OneToMany(targetEntity = Affinity.class, fetch = FetchType.LAZY)
+    @JoinTable(name="monster_strengthaffinities")
     private List<Affinity> strengths = new ArrayList<>();
 
     @OneToMany(targetEntity = Affinity.class, fetch = FetchType.LAZY)
+    @JoinTable(name="monster_weaknessaffinities")
     private List<Affinity> weaknesses = new ArrayList<>();
 
     /** refers to which quests is current monster type assigned */
