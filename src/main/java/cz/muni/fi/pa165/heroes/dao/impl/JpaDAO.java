@@ -57,6 +57,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
     @Override
     public T findById(Long id) {
+        if (id == null) throw new IllegalArgumentException("Cannot find by null id.");
         entityManager.getTransaction().begin();
 
         T entity = entityManager.find(entityClass, id);
@@ -69,6 +70,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
     @Override
     public T update(T entity) {
+        if (entity == null) throw new IllegalArgumentException("Cannot update to null entity.");
         entityManager.getTransaction().begin();
 
         T updatedEntity = entityManager.merge(entity);
@@ -81,6 +83,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
     @Override
     public boolean save(T entity) {
+        if (entity == null) throw new IllegalArgumentException("Cannot save a null entity.");
         boolean wasSuccess = true;
 
         entityManager.getTransaction().begin();
@@ -99,6 +102,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
     @Override
     public boolean delete(T entity) {
+        if (entity == null) throw new IllegalArgumentException("Cannot delete a null entity.");
         boolean wasSuccess = true;
 
         entityManager.getTransaction().begin();
@@ -117,6 +121,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
 
     @Override
     public boolean deleteById(Long id) {
+        if (id == null) throw new IllegalArgumentException("Cannot delete by a null id.");
         entityManager.getTransaction().begin();
 
         T entity = entityManager.find(entityClass, id);

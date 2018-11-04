@@ -25,14 +25,14 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
     public List<Hero> findAvailable() {
         entityManager.getTransaction().begin();
 
-        Query query = entityManager
+        List<Hero> availableHeroes = entityManager
             .createQuery(
                 "SELECT h FROM Hero h, Quest q WHERE h.isAlive = TRUE "
-                + "AND (h.quest IS NULL OR (h.quest = q.id AND q.state <> :state))");
-
-        query.setParameter("state", QuestState.ONGOING);
-
-        List<Hero> availableHeroes = query.getResultList();
+                + "AND (h.quest IS NULL OR (h.quest = q.id AND q.state <> :state))"
+                , Hero.class
+            )
+            .setParameter("state", QuestState.ONGOING)
+            .getResultList();
 
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -44,7 +44,7 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
     public List<Hero> findAlive() {
         entityManager.getTransaction().begin();
 
-        List<Hero> livingHeroes = entityManager.createQuery("SELECT h FROM Hero h WHERE h.isAlive = TRUE")
+        List<Hero> livingHeroes = entityManager.createQuery("SELECT h FROM Hero h WHERE h.isAlive = TRUE", Hero.class)
             .getResultList();
 
         entityManager.getTransaction().commit();
@@ -52,12 +52,27 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
 
         return livingHeroes;
     }
-    
+
+    @Override
+    public List<Hero> findByName(String name) {
+        if (name == null) throw new IllegalArgumentException("Cannot find by null Name.");
+        entityManager.getTransaction().commit();
+
+        List<Hero> heroesWithName = entityManager.createQuery("SELECT h FROM Hero h WHERE h.name = :name", Hero.class)
+            .setParameter("name", name)
+            .getResultList();
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+        return heroesWithName;
+    }
+
     @Override
     public List<Hero> findDead() {
         entityManager.getTransaction().begin();
 
-        List<Hero> deadHeroes = entityManager.createQuery("SELECT h FROM Hero h WHERE h.isAlive = FALSE")
+        List<Hero> deadHeroes = entityManager.createQuery("SELECT h FROM Hero h WHERE h.isAlive = FALSE", Hero.class)
           .getResultList();
 
         entityManager.getTransaction().commit();
@@ -68,13 +83,13 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
     
     @Override
     public List<Hero> findOnQuest(Quest quest) {
+        if (quest == null) throw new IllegalArgumentException("Cannot find by null Quest.");
         entityManager.getTransaction().begin();
 
-        Query query = entityManager.createQuery("SELECT h FROM Hero h WHERE h.quest = :questId");
-
-        query.setParameter("questId", quest.getId());
-
-        List<Hero> heroesOnQuest = query.getResultList();
+        List<Hero> heroesOnQuest = entityManager
+            .createQuery("SELECT h FROM Hero h WHERE h.quest = :questId", Hero.class)
+            .setParameter("questId", quest.getId())
+            .getResultList();
 
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -84,7 +99,17 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
 
     @Override
     public List<Hero> findWithSkill(Skill skill) {
-        // TODO: Implement me.
-        return null;
+        if (skill == null) throw new IllegalArgumentException("Cannot find by null Skill.");
+        entityManager.getTransaction().begin();
+
+        List<Hero> heroesWithSkill = entityManager
+            .createQuery("SELECT h FROM Hero h JOIN h.skills s WHERE s.id = :sid", Hero.class)
+            .setParameter("sid", skill.getId())
+            .getResultList();
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+        return heroesWithSkill;
     }
 }

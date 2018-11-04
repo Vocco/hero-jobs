@@ -29,6 +29,15 @@ public interface HeroDAO {
     List<Hero> findAlive();
 
     /**
+     * Finds all {@link Hero}es with the given name.
+     *
+     * @param name The name to search by.
+     *
+     * @return A {@link List} of {@link Hero}es who have the given name.
+     */
+    List<Hero> findByName(String name);
+
+    /**
      * Finds all dead {@link Hero}es.
      *
      * @return A {@link List} of {@link Hero}es who are not alive anymore.
