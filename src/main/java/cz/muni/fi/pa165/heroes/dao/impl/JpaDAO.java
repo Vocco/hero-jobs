@@ -9,7 +9,13 @@ import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -30,6 +36,10 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
     @PersistenceContext
     protected EntityManager entityManager;
 
+    // FIXME: This is a workaround.
+    @Autowired
+    private EntityManagerFactory emf;
+
 
     // CONSTRUCTORS
 
@@ -42,59 +52,53 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
     // DAO INTERFACE IMPLEMENTATION
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<T> findAll() {
-        entityManager.getTransaction().begin();
-
-        List<T> all = entityManager
+        return entityManager
             .createQuery("SELECT t FROM " + entityClass.getSimpleName() + " t")
             .getResultList();
-
-        entityManager.getTransaction().commit();
-        entityManager.close();
-
-        return all;
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public T findById(Long id) {
         if (id == null) throw new IllegalArgumentException("Cannot find by null id.");
-        entityManager.getTransaction().begin();
-
-        T entity = entityManager.find(entityClass, id);
-
-        entityManager.getTransaction().commit();
-        entityManager.close();
-
-        return entity;
+        return entityManager.find(entityClass, id);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public T update(T entity) {
         if (entity == null) throw new IllegalArgumentException("Cannot update to null entity.");
-        entityManager.getTransaction().begin();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
 
-        T updatedEntity = entityManager.merge(entity);
+        T updated = em.merge(entity);
 
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        tx.commit();
+        em.close();
 
-        return updatedEntity;
+        return updated;
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public boolean save(T entity) {
         if (entity == null) throw new IllegalArgumentException("Cannot save a null entity.");
         boolean wasSuccess = true;
 
-        entityManager.getTransaction().begin();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
 
         try {
-            entityManager.persist(entity);
-            entityManager.getTransaction().commit();
+            em.persist(entity);
+            tx.commit();
         } catch (EntityExistsException ex) {
             wasSuccess = false;
         } finally {
-            entityManager.close();
+          em.close();
         }
 
         return wasSuccess;

@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Michal Pavúk
  */
-public interface MonsterDAO {
+public interface MonsterDAO extends DAO<Monster> {
     /**
      * @param strength A name-level pair, see {@link Affinity}
      * @return List of monsters with matching strength or empty list if none exist
