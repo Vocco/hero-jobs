@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -33,7 +34,7 @@ import java.util.List;
  * @author Vojtech Krajnansky (423126)
  */
 @Entity
-public class Quest {
+public class Quest implements Serializable {
 
 
 	// ATTRIBUTES
