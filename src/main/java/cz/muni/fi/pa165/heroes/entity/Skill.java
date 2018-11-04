@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.heroes.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author Michal Pavúk
  */
 @Entity
-public class Skill {
+public class Skill implements Serializable {
 
     @Id
     @GeneratedValue
