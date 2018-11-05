@@ -25,12 +25,20 @@ public class Monster extends Actor {
     @Column(nullable = false)
     private String size;
 
-    @OneToMany(targetEntity = Affinity.class, fetch = FetchType.LAZY)
-    @JoinTable(name="monster_strengthaffinities")
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name="monster_strengthaffinities",
+        joinColumns = @JoinColumn(name = "monster_id"),
+        inverseJoinColumns = @JoinColumn(name = "affinity_id")
+    )
     private List<Affinity> strengths = new ArrayList<>();
 
-    @OneToMany(targetEntity = Affinity.class, fetch = FetchType.LAZY)
-    @JoinTable(name="monster_weaknessaffinities")
+        @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+        @JoinTable(
+            name="monster_weaknessaffinities",
+            joinColumns = @JoinColumn(name = "monster_id"),
+            inverseJoinColumns = @JoinColumn(name = "affinity_id")
+        )
     private List<Affinity> weaknesses = new ArrayList<>();
 
     /** refers to which quests is current monster type assigned */
