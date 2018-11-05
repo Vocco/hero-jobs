@@ -193,11 +193,18 @@ public class JpaQuestDAOTest {
     @Test
     public void testfindByMonster() {
         // TODO - fix questDAO.findByMonster
-//        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
-//        List<Quest> byMonster = questDAO.findByMonster(iceOgre);
-//
-//        assertEquals(1, byMonster.size());
+        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
+        List<Quest> byMonster = questDAO.findByMonster(iceOgre);
 
+        assertEquals(1, byMonster.size());
+
+        easyQuest.addMonster(iceOgre);
+        questDAO.update(easyQuest);
+
+        byMonster.clear();
+        byMonster = questDAO.findByMonster(iceOgre);
+
+        assertEquals(2, byMonster.size());
     }
 
     // findByAssignedHero

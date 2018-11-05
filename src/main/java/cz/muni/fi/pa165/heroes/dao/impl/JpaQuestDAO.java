@@ -50,7 +50,7 @@ public class JpaQuestDAO extends JpaDAO<Quest>  implements QuestDAO {
 	public List<Quest> findByMonster(Monster monster) {
 		Query query = entityManager
 				.createQuery(
-						"select q from Quest q join q.monsters m where m.id = :monsterId", Quest.class);
+						"select q from Quest q join q.monsters m where m.monster.id = :monsterId", Quest.class);
 		query.setParameter("monsterId", monster.getId());
 
 		List<Quest> quests = query.getResultList();
