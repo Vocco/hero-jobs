@@ -1,0 +1,165 @@
+@startuml
+scale 1.2
+
+package cz.muni.fi.pa165.heroes.entity {
+  class Skill {
+    Long id
+    String name
+    List<Affinity> affinities
+    int baseDamage
+  }
+
+  abstract class Actor {
+    Long id
+    String name
+    int hitpoints
+    int damage
+  }
+
+  class Hero {
+    int gold
+    boolean isAlive
+    int might
+    int agility
+    int magic
+    List<Skill> skills
+    Quest quest
+
+    void learnSkill(Skill)
+    void unlearnSkill(Skill)
+  }
+
+  enum QuestState {
+    NEW
+    ONGOING
+    SUCCESSFUL
+    FAILED
+  }
+
+  class Quest {
+    String name
+    String location
+    int award
+    int heroLimit
+
+    QuestState state
+    List<Hero> assignedHeroes
+    List<Hero> heroesDied
+    List<QuestMonster> monsters
+    int performanceEval
+
+    void addHero(Hero)
+    void addMonster(Monster)
+    void removeHero(Hero)
+    void removeMonster(Monster)
+    void start()
+  }
+
+  class QuestMonster {
+    QuestMonsterId id;
+    Quest quest;
+    Monster monster;
+    int monsterCount;
+
+    void increaseCount()
+    void decreaseCount()
+  }
+
+  class QuestMonsterId {
+    Long questId
+    Long monsterId
+  }
+
+  class Monster {
+    String size
+    List<Affinity> strengths
+    List<Affinity> weaknesses
+    List<Quests> assignedToQuests
+
+    void addWeakness(Affinity)
+    void removeWeakness(Affinity)
+    void removeAllWeaknesses()
+    void addStrength(Affinity)
+    void removeStrength(Affinity)
+    void removeAllStrengths()
+    void assignToQuest(QuestMonster)
+    void removeFromQuest(QuestMonster)
+  }
+
+  class Affinity {
+    String name
+    int level
+  }
+
+  Hero -up-|> Actor
+  Monster -up-|> Actor
+  Hero "0..N" -- "0..1" Quest
+  Monster "0..N" - "1..N" Quest
+  Hero "1" - "0..N" Skill : has
+  Monster "1" - "0..N" Affinity : is strong or weak to
+  Skill "1" - "1..N" Affinity : has
+  Quest - QuestState
+  Quest "1" - "1..N" QuestMonster
+  QuestMonster -* QuestMonsterId
+}
+
+package cz.muni.fi.pa165.heroes.dao {
+  interface DAO <T extends Serializable> {
+    List<T> findAll()
+    T findById(Long)
+    T update(T)
+    boolean save(T)
+    boolean delete(T)
+    boolean deleteById(Long)
+  }
+
+  interface QuestDAO {
+    List<Quest> findByState(QuestState)
+    List<Quest> findByLocation(String)
+    List<Quest> findByMonster(Monster)
+    List<Quest> findByAssignedHero(Hero)
+  }
+
+  interface HeroDAO {
+    List<Hero> findAvailable()
+    List<Hero> findAlive()
+    List<Hero> findByName(String)
+    List<Hero> findDead()
+    List<Hero> findOnQuest()
+    List<Hero> findWithSkill(Skill)
+  }
+
+  interface MonsterDAO {
+    List<Monster> findWithWeakness(Affinity)
+    List<Monster> findWithStrength(Affinity)
+    List<Monster> findWithSize(String)
+    List<Monster> findByQuest(Quest)
+  }
+
+  interface SkillDAO {
+    List<Skill> findByName(String)
+    List<Skill> findWithAffinity(Affinity)
+    List<Skill> findWithBaseDamage(int)
+    List<Skill> findWithGreaterBaseDamage(int)
+  }
+
+  QuestDAO -up-|> DAO
+  HeroDAO -up-|> DAO
+  MonsterDAO -up-|> DAO
+  SkillDAO -up-|> DAO
+
+package cz.muni.fi.pa165.heroes.dao.impl {
+JpaDAO --|> DAO
+
+JpaHeroDAO -up-|> HeroDAO
+JpaMonsterDAO -up-|> MonsterDAO
+JpaQuestDAO -up-|> QuestDAO
+JpaSkillDAO -up-|> SkillDAO
+
+JpaHeroDAO --> JpaDAO
+JpaMonsterDAO --> JpaDAO
+JpaQuestDAO --> JpaDAO
+JpaSkillDAO --> JpaDAO
+}
+}
+@enduml
