@@ -1,6 +1,8 @@
 package cz.muni.fi.pa165.heroes.entity;
 
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -49,6 +51,8 @@ public class Hero extends Actor {
         setMagic(magic);
         setSkills(skills);
     }
+
+    public Hero() { }
 
     // PUBLIC METHODS
 
