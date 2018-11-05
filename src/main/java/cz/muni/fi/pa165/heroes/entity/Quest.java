@@ -75,7 +75,7 @@ public class Quest implements Serializable {
 
     // CONSTRUCTORS
 
-    private Quest() {}
+    public Quest() {}
 
     public Quest(String name, String location, int reward, int heroLimit) {
         if (name == null) throw new IllegalArgumentException("Name of a quest can't be null");

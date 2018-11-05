@@ -125,6 +125,7 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public boolean deleteById(Long id) {
         if (id == null) throw new IllegalArgumentException("Cannot delete by a null id.");
 

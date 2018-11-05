@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Vojtech Krajnansky (423126)
  */
-public interface HeroDAO {
+public interface HeroDAO extends DAO<Hero> {
 
     /**
      * Finds all living {@link Hero}es who are not currently assigned to an ongoing quest.
