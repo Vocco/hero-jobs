@@ -37,6 +37,7 @@ public class Hero extends Actor {
     private List<Skill> skills = new ArrayList<>();
 
     // CONSTRUCTORS
+    public Hero(){ super();}
 
     public Hero(String name, int hitpoints, int damage, int gold, int might, int agility, int magic, List<Skill> skills) {
         setName(name);

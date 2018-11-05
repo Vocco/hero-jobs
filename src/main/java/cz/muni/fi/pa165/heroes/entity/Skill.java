@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.heroes.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Skill implements Serializable {
     private String name;
 
     @OneToMany(targetEntity = Affinity.class)
-    private List<Affinity> affinities;
+    private List<Affinity> affinities = new ArrayList<>();
     private int baseDamage;
 
     public Skill () {}

@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.heroes.dao;
 
+import cz.muni.fi.pa165.heroes.dao.impl.JpaDAO;
 import cz.muni.fi.pa165.heroes.entity.Hero;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Metodej Klang
  */
-public interface QuestDAO {
+public interface QuestDAO extends DAO<Quest> {
 
 
 	/**
