@@ -45,7 +45,7 @@ public class App
         List<Monster> found = monsterDAO.findWithStrength(fire);
 
         for (Monster m : found) {
-          System.out.println(m.getName());
+          System.out.println(m.toString());
         }
 
         em = emf.createEntityManager();

@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Vojtech Krajnansky (423126)
  */
+@Repository
 public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
 
 
@@ -30,7 +32,7 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
         return entityManager
             .createQuery(
                 "SELECT h FROM Hero h, Quest q WHERE h.isAlive = TRUE "
-                + "AND (h.quest IS NULL OR (h.quest = q.id AND q.state <> :state))"
+                + "AND (h.quest IS NULL OR (h.quest.id = q.id AND q.state <> :state))"
                 , Hero.class
             )
             .setParameter("state", QuestState.ONGOING)
@@ -67,7 +69,7 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
         if (quest == null) throw new IllegalArgumentException("Cannot find by null Quest.");
 
         return entityManager
-            .createQuery("SELECT h FROM Hero h WHERE h.quest = :questId", Hero.class)
+            .createQuery("SELECT h FROM Hero h WHERE h.quest.id = :questId", Hero.class)
             .setParameter("questId", quest.getId())
             .getResultList();
     }
@@ -78,7 +80,7 @@ public class JpaHeroDAO extends JpaDAO<Hero> implements HeroDAO {
         if (skill == null) throw new IllegalArgumentException("Cannot find by null Skill.");
 
         return entityManager
-            .createQuery("SELECT h FROM Hero h JOIN h.skills s WHERE s.id = :sid", Hero.class)
+            .createQuery("SELECT h FROM Hero h JOIN FETCH h.skills s WHERE s.id = :sid", Hero.class)
             .setParameter("sid", skill.getId())
             .getResultList();
     }
