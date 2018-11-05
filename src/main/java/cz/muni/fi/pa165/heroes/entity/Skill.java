@@ -22,8 +22,12 @@ public class Skill implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(targetEntity = Affinity.class)
-    private List<Affinity> affinities = new ArrayList<>();
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "skill_id"),
+            inverseJoinColumns = @JoinColumn(name = "affinity_id")
+    )
+    private List<Affinity> affinities = new ArrayList<Affinity>();
     private int baseDamage;
 
     public Skill () {}
