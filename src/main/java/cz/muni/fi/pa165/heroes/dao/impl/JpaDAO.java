@@ -67,7 +67,6 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
     public T update(T entity) {
         if (entity == null) throw new IllegalArgumentException("Cannot update to null entity.");
         EntityManager em = emf.createEntityManager();
@@ -83,7 +82,6 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
     public boolean save(T entity) {
         if (entity == null) throw new IllegalArgumentException("Cannot save a null entity.");
         boolean wasSuccess = true;
@@ -109,15 +107,18 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
         if (entity == null) throw new IllegalArgumentException("Cannot delete a null entity.");
         boolean wasSuccess = true;
 
-        entityManager.getTransaction().begin();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
 
         try {
-            entityManager.remove(entity);
-            entityManager.getTransaction().commit();
+            em.remove(em.contains(entity) ? entity : em.merge(entity));
+            tx.commit();
         } catch (IllegalArgumentException ex) {
+            System.out.println(ex);
             wasSuccess = false;
         } finally {
-            entityManager.close();
+            em.close();
         }
 
         return wasSuccess;
@@ -126,19 +127,22 @@ public abstract class JpaDAO<T extends Serializable> implements DAO<T> {
     @Override
     public boolean deleteById(Long id) {
         if (id == null) throw new IllegalArgumentException("Cannot delete by a null id.");
-        entityManager.getTransaction().begin();
 
-        T entity = entityManager.find(entityClass, id);
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        T entity = em.find(entityClass, id);
 
         if (entity == null) {
-            entityManager.getTransaction().commit();
-            entityManager.close();
+            tx.commit();
+            em.close();
             return false;
         }
 
-        entityManager.remove(entity);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        em.remove(entity);
+        tx.commit();
+        em.close();
 
         return true;
     }
