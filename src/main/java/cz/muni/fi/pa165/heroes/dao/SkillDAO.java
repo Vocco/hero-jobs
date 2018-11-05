@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Jakub Strmen
  */
-public interface SkillDAO {
+public interface SkillDAO extends DAO<Skill> {
 
     /**
      * Finds all {@link Skill}s with given name - note that name doesn't have to be unique
