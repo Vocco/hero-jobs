@@ -36,13 +36,17 @@ public class App
         Monster ogre = new Monster("Ogre", 150, 30, "medium", Arrays.asList(fire), Arrays.asList(light));
         em.persist(ogre);
 
-        em.getTransaction().commit();
         em.flush();
+        em.getTransaction().commit();
+        
         em.close();
 
         MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
         List<Monster> found = monsterDAO.findWithStrength(fire);
-        System.out.println(found);
+
+        for (Monster m : found) {
+          System.out.println(m.getName());
+        }
 
         em = emf.createEntityManager();
         System.out.println(em.createQuery("SELECT m FROM Monster m").getResultList());
