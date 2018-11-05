@@ -192,7 +192,6 @@ public class JpaQuestDAOTest {
 
     @Test
     public void testfindByMonster() {
-        // TODO - fix questDAO.findByMonster
         QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         List<Quest> byMonster = questDAO.findByMonster(iceOgre);
 
