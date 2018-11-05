@@ -22,6 +22,7 @@ public class Skill implements Serializable {
     @Column(nullable = false)
     private String name;
 
+
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             joinColumns = @JoinColumn(name = "skill_id"),

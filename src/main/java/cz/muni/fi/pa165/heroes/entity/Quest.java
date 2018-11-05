@@ -53,6 +53,7 @@ public class Quest implements Serializable {
     @Column(nullable = false)
     private int reward;
 
+    /** minimum of heroes to start quest */
     @Column(nullable = false)
     private int heroLimit;
 
