@@ -202,7 +202,7 @@ public class JpaSkillDAOTest {
 	@Test
 	public void testSave() {
 		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
-		Skill newSkill = new Skill("New Skill", Arrays.asList(pierce2), 8);
+		Skill newSkill = new Skill("New Skill", new ArrayList<Affinity>(), 8);
 
 		skillDAO.save(newSkill);
 

@@ -52,8 +52,6 @@ public class Hero extends Actor {
         setSkills(skills);
     }
 
-    public Hero() { }
-
     // PUBLIC METHODS
 
     /**
