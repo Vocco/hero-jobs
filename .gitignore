@@ -1,6 +1,9 @@
 # Compiled class file
 *.class
 
+# Target directories
+dao/target
+
 # Log file
 *.log
 
@@ -9,6 +12,9 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+
+# Project metadata
+.project
 
 # Package Files #
 *.jar
