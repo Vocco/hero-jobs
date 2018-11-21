@@ -3,6 +3,7 @@
 
 # Target directories
 dao/target
+api/target
 
 # Log file
 *.log
