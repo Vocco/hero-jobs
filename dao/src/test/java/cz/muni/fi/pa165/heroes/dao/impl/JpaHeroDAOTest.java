@@ -10,13 +10,14 @@ import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,12 @@ import static org.junit.Assert.*;
  *
  * @author Michal Pavúk
  */
-@Transactional
+@ContextConfiguration(classes = InMemoryDatabaseSpring.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class JpaHeroDAOTest {
 
-    private ApplicationContext context = new AnnotationConfigApplicationContext(InMemoryDatabaseSpring.class);
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
+    @Autowired
+    HeroDAO heroDAO;
 
     private Hero warrior;
     private Hero rogue;
@@ -45,6 +47,7 @@ public class JpaHeroDAOTest {
 
     @Before
     public void setUp() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
         em = emf.createEntityManager();
         em.getTransaction().begin();
 
@@ -105,6 +108,7 @@ public class JpaHeroDAOTest {
         em.flush();
         em.getTransaction().commit();
         em.close();
+        emf.close();
     }
 
     @After
@@ -114,9 +118,7 @@ public class JpaHeroDAOTest {
 
 
     @Test
-    @Transactional
     public void testFindAll() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> heroes = heroDAO.findAll();
 
         assertEquals(3, heroes.size());
@@ -129,9 +131,7 @@ public class JpaHeroDAOTest {
      * Test for the findById method.
      */
     @Test
-    @Transactional
     public void testFindById() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         Hero war = heroDAO.findById(warrior.getId());
         Hero mag = heroDAO.findById(mage.getId());
         Hero invalid = heroDAO.findById(-1L);
@@ -145,9 +145,7 @@ public class JpaHeroDAOTest {
      * Test for the update method.
      */
     @Test
-    @Transactional
     public void testUpdate() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         warrior.setName("Dovahkin");
 
         heroDAO.update(warrior);
@@ -160,9 +158,7 @@ public class JpaHeroDAOTest {
      * Test for the update method.
      */
     @Test
-    @Transactional
     public void testSave() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         Hero hunter = new Hero("Gabriel van Hellsing", 250, 20, 563, 6, 6, 6, new ArrayList<Skill>());
 
         heroDAO.save(hunter);
@@ -173,20 +169,14 @@ public class JpaHeroDAOTest {
     }
 
     @Test
-    @Transactional
     public void testDelete() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
-
         assertTrue(heroDAO.delete(rogue));
         assertEquals(2, heroDAO.findAll().size());
         assertNull(heroDAO.findById(rogue.getId()));
     }
 
     @Test
-    @Transactional
     public void testDeleteById() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
-
         assertTrue(heroDAO.deleteById(rogue.getId()));
         assertEquals(2, heroDAO.findAll().size());
         assertNull(heroDAO.findById(rogue.getId()));
@@ -194,7 +184,6 @@ public class JpaHeroDAOTest {
 
     @Test
     public void testFindAvailable() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> available = heroDAO.findAvailable();
 
         assertEquals(1, available.size());
@@ -202,9 +191,7 @@ public class JpaHeroDAOTest {
     }
 
     @Test
-    @Transactional
     public void testFindAlive() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> alive = heroDAO.findAlive();
 
         assertEquals(2, alive.size());
@@ -216,7 +203,6 @@ public class JpaHeroDAOTest {
 
     @Test
     public void testFindByName() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> found = heroDAO.findByName("Beowulf");
 
         assertEquals(1, found.size());
@@ -226,7 +212,6 @@ public class JpaHeroDAOTest {
 
     @Test
     public void testFindDead() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> dead = heroDAO.findDead();
 
         assertEquals(1, dead.size());
@@ -237,7 +222,6 @@ public class JpaHeroDAOTest {
 
     @Test
     public void testFindOnQuest() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> onQuest = heroDAO.findOnQuest(mageQuest);
 
         assertEquals(1, onQuest.size());
@@ -246,7 +230,6 @@ public class JpaHeroDAOTest {
 
     @Test
     public void testFindWithSkill() {
-        HeroDAO heroDAO = context.getBean("jpaHeroDAO", JpaHeroDAO.class);
         List<Hero> found = heroDAO.findWithSkill(heal);
 
         assertEquals(1, found.size());

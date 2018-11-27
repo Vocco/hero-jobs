@@ -1,6 +1,12 @@
 # hero-jobs
 A team project for the PA165 (Enterprise Java) course at the Faculty of Informatics, Masaryk University
 
+### How to run
+The project should be compilable by running `mvn clean install` in hero-jobs (root) directory.
+To obtain a 'fat' jar file with all dependencies included, you can run `mvn package`.
+
+When building the project, please be patient as the tests may take about a minute to complete.
+
 ## Project description
 A web application, information system for an employment agency for monster slaying heroes. It keeps:
 - a list of available heroes with theis personal data (names, skills, images)

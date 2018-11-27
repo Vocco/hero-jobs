@@ -2,29 +2,25 @@ package cz.muni.fi.pa165.heroes.dao.impl;
 
 
 import cz.muni.fi.pa165.InMemoryDatabaseSpring;
-import cz.muni.fi.pa165.heroes.dao.DAO;
 import cz.muni.fi.pa165.heroes.dao.MonsterDAO;
 import cz.muni.fi.pa165.heroes.entity.Affinity;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-
-import org.junit.Test;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import static org.junit.Assert.*;
 
 
 /**
@@ -32,10 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Vojtech Krajnansky (423126)
  */
-@Transactional
+@ContextConfiguration(classes = InMemoryDatabaseSpring.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class JpaMonsterDAOTest {
 
-    private ApplicationContext context = new AnnotationConfigApplicationContext(InMemoryDatabaseSpring.class);
+    @Autowired
+    private MonsterDAO monsterDAO;
+
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
 
     private Affinity fire;
@@ -85,10 +84,9 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testFindAll() {
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
         List<Monster> allMonsters = monsterDAO.findAll();
 
-        assertTrue(allMonsters.size() == 3);
+        assertEquals(3, allMonsters.size());
 
         List<String> names = new ArrayList<>();
 
@@ -106,47 +104,42 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testFindById() {
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
         Monster fo = monsterDAO.findById(fireOgre.getId());
         Monster io = monsterDAO.findById(iceOgre.getId());
         Monster ef = monsterDAO.findById(efreet.getId());
         Monster nonexistent = (Monster) monsterDAO.findById(new Long("-1"));
 
-        assertTrue(fo.getName().equals(fireOgre.getName()));
-        assertTrue(io.getName().equals(iceOgre.getName()));
-        assertTrue(ef.getName().equals(efreet.getName()));
-        assertTrue(nonexistent == null);
+        assertEquals(fo.getName(), fireOgre.getName());
+        assertEquals(io.getName(), iceOgre.getName());
+        assertEquals(ef.getName(), efreet.getName());
+        assertNull(nonexistent);
     }
 
     /**
      * Test for the update method.
      */
-    @Transactional
     @Test
     public void testUpdate() {
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
         fireOgre.setName("New Fire Ogre");
 
         monsterDAO.update(fireOgre);
 
         Monster found = (Monster) monsterDAO.findById(fireOgre.getId());
-        assertTrue(found.getName().equals("New Fire Ogre"));
+        assertEquals("New Fire Ogre", found.getName());
     }
 
     /**
      * Test for the save method.
      */
-    @Transactional
     @Test
     public void testSave() {
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
         Monster newMonster = new Monster("New Guy", 110, 10, "small", new ArrayList<Affinity>(), new ArrayList<Affinity>());
 
         monsterDAO.save(newMonster);
 
-        assertTrue(monsterDAO.findAll().size() == 4);
+        assertEquals(4, monsterDAO.findAll().size());
         Monster found = (Monster) monsterDAO.findById(newMonster.getId());
-        assertTrue(found.getName().equals("New Guy"));
+        assertEquals("New Guy", found.getName());
     }
 
     /**
@@ -154,11 +147,9 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testDelete() {
-      MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
-
       assertTrue(monsterDAO.delete(fireOgre));
-      assertTrue(monsterDAO.findAll().size() == 2);
-      assertTrue(monsterDAO.findById(fireOgre.getId()) == null);
+        assertEquals(2, monsterDAO.findAll().size());
+        assertNull(monsterDAO.findById(fireOgre.getId()));
     }
 
     /**
@@ -166,11 +157,9 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testDeleteById() {
-      MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
-
       assertTrue(monsterDAO.deleteById(fireOgre.getId()));
-      assertTrue(monsterDAO.findAll().size() == 2);
-      assertTrue(monsterDAO.findById(fireOgre.getId()) == null);
+        assertEquals(2, monsterDAO.findAll().size());
+        assertNull(monsterDAO.findById(fireOgre.getId()));
     }
 
     /**
@@ -178,18 +167,16 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testFindWithStrength() {
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
-
         List<Monster> withFire = monsterDAO.findWithStrength(fire);
-        assertTrue(withFire.size() == 2);
+        assertEquals(2, withFire.size());
 
         List<Monster> withIce = monsterDAO.findWithStrength(ice);
-        assertTrue(withIce.size() == 1);
+        assertEquals(1, withIce.size());
 
-        assertTrue(withIce.get(0).getName().equals("Ice Ogre"));
+        assertEquals("Ice Ogre", withIce.get(0).getName());
 
         List<Monster> withWater = monsterDAO.findWithStrength(water);
-        assertTrue(withWater.size() == 0);
+        assertEquals(0, withWater.size());
     }
 
     /**
@@ -197,23 +184,21 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testFindWithWeakness() {
-      MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
-
       List<Monster> withLightLow = monsterDAO.findWithWeakness(lightLow);
-      assertTrue(withLightLow.size() == 2);
+        assertEquals(2, withLightLow.size());
 
       List<Monster> withWater = monsterDAO.findWithWeakness(water);
-      assertTrue(withWater.size() == 1);
+        assertEquals(1, withWater.size());
 
-      assertTrue(withWater.get(0).getName().equals("Efreet"));
+        assertEquals("Efreet", withWater.get(0).getName());
 
       List<Monster> withLightHigh = monsterDAO.findWithWeakness(lightHigh);
-      assertTrue(withLightHigh.size() == 1);
+        assertEquals(1, withLightHigh.size());
 
-      assertTrue(withLightHigh.get(0).getName().equals("Fire Ogre"));
+        assertEquals("Fire Ogre", withLightHigh.get(0).getName());
 
       List<Monster> withIce = monsterDAO.findWithWeakness(ice);
-      assertTrue(withIce.size() == 0);
+        assertEquals(0, withIce.size());
     }
 
     /**
@@ -221,16 +206,14 @@ public class JpaMonsterDAOTest {
      */
     @Test
     public void testFindWithSize() {
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
-
         List<Monster> small = monsterDAO.findWithSize("small");
         List<Monster> medium = monsterDAO.findWithSize("medium");
         List<Monster> large = monsterDAO.findWithSize("large");
 
-        assertTrue(large.size() == 0);
-        assertTrue(small.size() == 1);
-        assertTrue(small.get(0).getName().equals("Efreet"));
-        assertTrue(medium.size() == 2);
+        assertEquals(0, large.size());
+        assertEquals(1, small.size());
+        assertEquals("Efreet", small.get(0).getName());
+        assertEquals(2, medium.size());
     }
 
     /**
@@ -259,10 +242,8 @@ public class JpaMonsterDAOTest {
 
         em.close();
 
-        MonsterDAO monsterDAO = context.getBean("jpaMonsterDAO", JpaMonsterDAO.class);
-
         List<Monster> inDarkCave = monsterDAO.findByQuest(darkCave);
-        assertTrue(inDarkCave.size() == 2);
+        assertEquals(2, inDarkCave.size());
 
         List<String> names = new ArrayList<>();
 
@@ -274,6 +255,6 @@ public class JpaMonsterDAOTest {
         assertTrue(names.contains("Efreet"));
 
         List<Monster> inHappyLands = monsterDAO.findByQuest(happyLands);
-        assertTrue(inHappyLands.size() == 0);
+        assertEquals(0, inHappyLands.size());
     }
 }
