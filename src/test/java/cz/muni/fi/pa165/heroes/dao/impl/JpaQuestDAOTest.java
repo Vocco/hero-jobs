@@ -6,9 +6,10 @@ import cz.muni.fi.pa165.heroes.dao.QuestDAO;
 import cz.muni.fi.pa165.heroes.entity.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,20 +20,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for Quest JPA DAO implementation.
  *
  * @author Jakub Strmen
  */
-@Transactional
+
+@ContextConfiguration(classes = InMemoryDatabaseSpring.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class JpaQuestDAOTest {
 
-    private ApplicationContext context = new AnnotationConfigApplicationContext(InMemoryDatabaseSpring.class);
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
-
+    @Autowired
+    private QuestDAO questDAO;
 
     private Quest easyQuest;
     private Quest hardQuest;
@@ -44,6 +45,7 @@ public class JpaQuestDAOTest {
     //before
     @Before
     public void before(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
@@ -84,11 +86,11 @@ public class JpaQuestDAOTest {
         em.getTransaction().commit();
 
         em.close();
+        emf.close();
     }
 
     @Test
     public void testFindAll(){
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         List<Quest> allQuests = questDAO.findAll();
 
         assertEquals(2, allQuests.size());
@@ -106,7 +108,6 @@ public class JpaQuestDAOTest {
 
     @Test
     public void testFindById(){
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         Quest wantedQuest1 = questDAO.findById(easyQuest.getId());
         Quest wantedQuest2 = questDAO.findById(hardQuest.getId());
 
@@ -117,7 +118,6 @@ public class JpaQuestDAOTest {
 
     @Test
     public void testUpdate() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         easyQuest.setName("Maybe little harder than expected");
 
         questDAO.update(easyQuest);
@@ -128,38 +128,31 @@ public class JpaQuestDAOTest {
 
     @Test
     public void testSave() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         Quest quest = new Quest("testQuest", "Magic land", 1000, 4);
 
         questDAO.save(quest);
 
-        assertTrue(questDAO.findAll().size() == 3);
+        assertEquals(3, questDAO.findAll().size());
         Quest found = (Quest) questDAO.findById(quest.getId());
-        assertTrue(found.getName().equals("testQuest"));
+        assertEquals("testQuest", found.getName());
     }
 
     @Test
     public void testDelete() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
-
         assertTrue(questDAO.delete(easyQuest));
-        assertTrue(questDAO.findAll().size() == 1);
-        assertTrue(questDAO.findById(easyQuest.getId()) == null);
+        assertEquals(1, questDAO.findAll().size());
+        assertNull(questDAO.findById(easyQuest.getId()));
     }
 
     @Test
     public void testDeleteById() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
-
         assertTrue(questDAO.deleteById(easyQuest.getId()));
-        assertTrue(questDAO.findAll().size() == 1);
-        assertTrue(questDAO.findById(easyQuest.getId()) == null);
+        assertEquals(1, questDAO.findAll().size());
+        assertNull(questDAO.findById(easyQuest.getId()));
     }
 
     @Test
     public void testfindByState() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
-
         List<Quest> allQuests = questDAO.findByState(QuestState.NEW);
 
         assertEquals(2, allQuests.size());
@@ -176,7 +169,6 @@ public class JpaQuestDAOTest {
 
     @Test
     public void testfindByLocation() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         List<Quest> byLocation = questDAO.findByLocation("Wonderland");
 
         assertEquals(1, byLocation.size());
@@ -192,7 +184,6 @@ public class JpaQuestDAOTest {
 
     @Test
     public void testfindByMonster() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         List<Quest> byMonster = questDAO.findByMonster(iceOgre);
 
         assertEquals(1, byMonster.size());
@@ -206,10 +197,8 @@ public class JpaQuestDAOTest {
         assertEquals(2, byMonster.size());
     }
 
-    // findByAssignedHero
     @Test
     public void testfindByHero() {
-        QuestDAO questDAO = context.getBean("jpaQuestDAO", JpaQuestDAO.class);
         List<Quest> byAssignedHero = questDAO.findByAssignedHero(warrior);
 
         assertEquals(0, byAssignedHero.size());

@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165;
 
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,26 +14,26 @@ import javax.sql.DataSource;
 
 
 @Configuration
+@EnableTransactionManagement
 @ComponentScan(basePackages = "cz.muni.fi.pa165.heroes")
 @EnableJpaRepositories("cz.muni.fi.pa165.heroes.dao")
 public class InMemoryDatabaseSpring {
 
     @Bean
-    public LocalEntityManagerFactoryBean entityManagerFactoryBean() {
-        LocalEntityManagerFactoryBean factory = new LocalEntityManagerFactoryBean();
-
-        // To create the in-memory database
-        db();
-
-        factory.setPersistenceUnitName("development");
-        return factory;
+    public JpaTransactionManager transactionManager() {
+        return new JpaTransactionManager(entityManagerFactory().getObject());
     }
 
     @Bean
-    public DataSource db() {
-        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-        EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.DERBY).ignoreFailedDrops(true).build();
-        return db;
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean jpaFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        jpaFactoryBean.setLoadTimeWeaver(instrumentationLoadTimeWeaver());
+        jpaFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+        return jpaFactoryBean;
     }
 
+    @Bean
+    public LoadTimeWeaver instrumentationLoadTimeWeaver() {
+        return new InstrumentationLoadTimeWeaver();
+    }
 }

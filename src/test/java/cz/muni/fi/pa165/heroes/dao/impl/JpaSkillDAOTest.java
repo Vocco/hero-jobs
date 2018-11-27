@@ -7,15 +7,14 @@ import cz.muni.fi.pa165.heroes.entity.Affinity;
 import cz.muni.fi.pa165.heroes.entity.Skill;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +26,13 @@ import static org.junit.Assert.*;
  *
  * @author Metodej Klang
  */
-@Transactional
+
+@ContextConfiguration(classes = InMemoryDatabaseSpring.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class JpaSkillDAOTest {
 
-	private ApplicationContext context = new AnnotationConfigApplicationContext(InMemoryDatabaseSpring.class);
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
+	@Autowired
+	private SkillDAO skillDAO;
 
 	private Affinity fire1;
 	private Affinity pierce2;
@@ -45,6 +46,7 @@ public class JpaSkillDAOTest {
 
 	@Before
 	public void setUp() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 
@@ -79,13 +81,12 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void TestFindByName() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		List<Skill> skills = skillDAO.findByName("Poison Spear");
 
-		assertTrue(skills.size() == 2);
+		assertEquals(2, skills.size());
 
-		assertTrue(skills.get(0).getName().equals("Poison Spear"));
-		assertTrue(skills.get(1).getName().equals("Poison Spear"));
+		assertEquals("Poison Spear", skills.get(0).getName());
+		assertEquals("Poison Spear", skills.get(1).getName());
 	}
 
 	/**
@@ -93,10 +94,9 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testFindWithAffinity() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		List<Skill> skills = skillDAO.findWithAffinity(fire1);
 
-		assertTrue(skills.size() == 2);
+		assertEquals(2, skills.size());
 
 		List<String> names = new ArrayList<>();
 
@@ -113,12 +113,11 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testFindWithBaseDamage() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		List<Skill> skills = skillDAO.findWithBaseDamage(5);
 
-		assertTrue(skills.size() == 1);
+		assertEquals(1, skills.size());
 
-		assertTrue(skills.get(0).getName().equals("Meteor Shower"));
+		assertEquals("Meteor Shower", skills.get(0).getName());
 	}
 
 	/**
@@ -126,10 +125,9 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testFindWithGreaterBaseDamage() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		List<Skill> skills = skillDAO.findWithGreaterBaseDamage(5);
 
-		assertTrue(skills.size() == 2);
+		assertEquals(2, skills.size());
 
 		List<String> names = new ArrayList<>();
 
@@ -146,10 +144,9 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testFindAll() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		List<Skill> skills = skillDAO.findAll();
 
-		assertTrue(skills.size() == 4);
+		assertEquals(4, skills.size());
 
 		List<Integer> dmgs = new ArrayList<>();
 
@@ -168,18 +165,17 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testFindById() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		Skill mS = skillDAO.findById(meteorShower.getId());
 		Skill pS = skillDAO.findById(poisonSpear.getId());
 		Skill pS2 = skillDAO.findById(poisonSpear2.getId());
 		Skill fA = skillDAO.findById(fireArrow.getId());
 		Skill nonexistent = (Skill) skillDAO.findById(new Long("-1"));
 
-		assertTrue(mS.getName().equals(meteorShower.getName()));
-		assertTrue(pS.getName().equals(poisonSpear.getName()));
-		assertTrue(pS2.getName().equals(poisonSpear2.getName()));
-		assertTrue(fA.getName().equals(fireArrow.getName()));
-		assertTrue(nonexistent == null);
+		assertEquals(mS.getName(), meteorShower.getName());
+		assertEquals(pS.getName(), poisonSpear.getName());
+		assertEquals(pS2.getName(), poisonSpear2.getName());
+		assertEquals(fA.getName(), fireArrow.getName());
+		assertNull(nonexistent);
 	}
 
 	/**
@@ -187,13 +183,12 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testUpdate() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		poisonSpear2.setName("Better Poison Spear");
 
 		skillDAO.update(poisonSpear2);
 
 		Skill newPoisonSpear = skillDAO.findById(poisonSpear2.getId());
-		assertTrue(newPoisonSpear.getName().equals("Better Poison Spear"));
+		assertEquals("Better Poison Spear", newPoisonSpear.getName());
 	}
 
 	/**
@@ -201,14 +196,13 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testSave() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		Skill newSkill = new Skill("New Skill", new ArrayList<Affinity>(), 8);
 
 		skillDAO.save(newSkill);
 
-		assertTrue(skillDAO.findAll().size() == 5);
+		assertEquals(5, skillDAO.findAll().size());
 		Skill skill = skillDAO.findById(newSkill.getId());
-		assertTrue(skill.getName().equals("New Skill"));
+		assertEquals("New Skill", skill.getName());
 	}
 
 	/**
@@ -216,10 +210,9 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testDelete() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		assertTrue(skillDAO.delete(poisonSpear2));
-		assertTrue(skillDAO.findAll().size() == 3);
-		assertTrue(skillDAO.findById(poisonSpear2.getId()) == null);
+		assertEquals(3, skillDAO.findAll().size());
+		assertNull(skillDAO.findById(poisonSpear2.getId()));
 	}
 
 	/**
@@ -227,9 +220,8 @@ public class JpaSkillDAOTest {
 	 */
 	@Test
 	public void testDeleteById() {
-		SkillDAO skillDAO = context.getBean("jpaSkillDAO", JpaSkillDAO.class);
 		assertTrue(skillDAO.deleteById(poisonSpear2.getId()));
-		assertTrue(skillDAO.findAll().size() == 3);
-		assertTrue(skillDAO.findById(poisonSpear2.getId()) == null);
+		assertEquals(3, skillDAO.findAll().size());
+		assertNull(skillDAO.findById(poisonSpear2.getId()));
 	}
 }
