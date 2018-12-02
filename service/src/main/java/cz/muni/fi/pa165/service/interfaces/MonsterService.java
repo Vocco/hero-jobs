@@ -13,9 +13,10 @@ public interface MonsterService {
 	  Monster findById(Long id);
 	  List<Monster> findAll();
 
-	  void create(Monster monster);
-	  void remove(Monster monster);
-	  void update(Monster monster);
+	  boolean save(Monster monster);
+	  Monster update(Monster monster);
+	  boolean delete(Monster monster);
+	  boolean deleteById(Long id);
 
 	  List<Monster> findWithStrength(Affinity strength);
 	  List<Monster> findWithWeakness(Affinity weakness);

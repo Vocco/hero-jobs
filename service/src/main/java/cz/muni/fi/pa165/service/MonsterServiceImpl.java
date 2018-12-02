@@ -36,18 +36,23 @@ public class MonsterServiceImpl implements MonsterService {
     }
 
     @Override
-    public void create(Monster monster) {
-        monsterDao.save(monster);
+    public boolean save(Monster monster) {
+        return monsterDao.save(monster);
     }
 
     @Override
-    public void remove(Monster monster) {
-        monsterDao.delete(monster);
+    public boolean delete(Monster monster) {
+        return monsterDao.delete(monster);
     }
 
     @Override
-    public void update(Monster monster) {
-        monsterDao.update(monster);
+    public boolean deleteById(Long id) {
+        return monsterDao.deleteById(id);
+    }
+
+    @Override
+    public Monster update(Monster monster) {
+        return monsterDao.update(monster);
     }
 
     @Override

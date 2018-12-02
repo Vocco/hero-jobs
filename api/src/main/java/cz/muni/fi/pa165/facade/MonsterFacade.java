@@ -95,4 +95,24 @@ public interface MonsterFacade {
      * @return A list of monsters with a given quest
      */
     List<MonsterDto> findByQuest(QuestDto quest);
+
+    // TODO: Move these methods to AffinityFacade (and reflect in service layer).
+
+    /**
+     * Finds all weaknesses of monsters on a given quest.
+     *
+     * @param quest Quest containing monsters to look for
+     *
+     * @return A list of all weaknesses of monsters with a given quest
+     */
+    List<AffinityDto> findAllWeaknessesOfMonstersOnQuest(QuestDto quest);
+
+    /**
+     * Finds all strengths of monsters on a given quest.
+     *
+     * @param quest Quest containing monsters to look for
+     *
+     * @return A list of all strengths of monsters with a given quest
+     */
+    List<AffinityDto> findAllStrengthsOfMonstersOnQuest(QuestDto quest);
 }
