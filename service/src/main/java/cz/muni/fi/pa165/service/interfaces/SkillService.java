@@ -1,4 +1,4 @@
-package cz.muni.fi.pa165.heroes.service;
+package cz.muni.fi.pa165.service.interfaces;
 
 import cz.muni.fi.pa165.heroes.entity.Affinity;
 import cz.muni.fi.pa165.heroes.entity.Skill;

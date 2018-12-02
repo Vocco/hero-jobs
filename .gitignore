@@ -4,6 +4,7 @@
 # Target directories
 dao/target
 api/target
+service/target
 
 # Log file
 *.log

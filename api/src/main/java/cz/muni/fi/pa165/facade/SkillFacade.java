@@ -5,59 +5,7 @@ import cz.muni.fi.pa165.dto.SkillDto;
 
 import java.util.List;
 
-public interface SkillFacade {
-
-  /**
-   * Gets all the skills available.
-   *
-   * @return A {@link List} of all existing skills.
-   */
-  List<SkillDto> findAll();
-
-  /**
-   * Gets a single skill by its ID, or null if such a skill doesn't exist.
-   *
-   * @param id The ID of the skill being accessed.
-   *
-   * @return The skill with given ID, or null if not found.
-   */
-  SkillDto findById(Long id);
-
-  /**
-   * Updates the skill's attributes.
-   *
-   * @param skill The updated skill.
-   *
-   * @return The updated skill.
-   */
-  SkillDto update(SkillDto skill);
-
-  /**
-   * Persists a new skill.
-   *
-   * @param skill The skill to be persisted.
-   *
-   * @return true if the operation succeeded, false otherwise.
-   */
-  boolean save(SkillDto skill);
-
-  /**
-   * Deletes a skill.
-   *
-   * @param skill The skill to be deleted.
-   *
-   * @return true if the operation succeeded, false otherwise.
-   */
-  boolean delete(SkillDto skill);
-
-  /**
-   * Deletes a skill with given ID.
-   *
-   * @param id The ID of the skill to be deleted.
-   *
-   * @return true if the operation succeeded, false otherwise.
-   */
-  boolean deleteById(Long id);
+public interface SkillFacade extends BaseFacade<SkillDto> {
 
   /**
    * Finds all skills with given name - note that name doesn't have to be unique.

@@ -7,59 +7,7 @@ import cz.muni.fi.pa165.dto.QuestState;
 
 import java.util.List;
 
-public interface QuestFacade {
-
-    /**
-     * Gets all the quests available.
-     *
-     * @return A {@link List} of all existing quests.
-     */
-    List<QuestDto> findAll();
-
-    /**
-     * Gets a single quest by its ID, or null if such a quest doesn't exist.
-     *
-     * @param id The ID of the quest being accessed.
-     *
-     * @return The quest with given ID, or null if not found.
-     */
-    QuestDto findById(Long id);
-
-    /**
-     * Updates the quest's attributes.
-     *
-     * @param quest The updated quest.
-     *
-     * @return The updated quest.
-     */
-    QuestDto update(QuestDto quest);
-
-    /**
-     * Persists a new quest.
-     *
-     * @param quest The quest to be persisted.
-     *
-     * @return true if the operation succeeded, false otherwise.
-     */
-    boolean save(QuestDto quest);
-
-    /**
-     * Deletes a quest.
-     *
-     * @param quest The quest to be deleted.
-     *
-     * @return true if the operation succeeded, false otherwise.
-     */
-    boolean delete(QuestDto quest);
-
-    /**
-     * Deletes a quest with given ID.
-     *
-     * @param id The ID of the quest to be deleted.
-     *
-     * @return true if the operation succeeded, false otherwise.
-     */
-    boolean deleteById(Long id);
+public interface QuestFacade extends BaseFacade<QuestDto> {
 
     /**
      * Finds all quests with certain state.

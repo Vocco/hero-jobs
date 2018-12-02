@@ -6,60 +6,7 @@ import cz.muni.fi.pa165.dto.SkillDto;
 
 import java.util.List;
 
-public interface HeroFacade {
-
-
-    /**
-     * Gets all the heroes available.
-     *
-     * @return A {@link List} of all existing heroes.
-     */
-    List<HeroDto> findAll();
-
-    /**
-     * Gets a single hero by its ID, or null if such a hero doesn't exist.
-     *
-     * @param id The ID of the hero being accessed.
-     *
-     * @return The hero with given ID, or null if not found.
-     */
-    HeroDto findById(Long id);
-
-    /**
-     * Updates the hero's attributes.
-     *
-     * @param hero The updated hero.
-     *
-     * @return The updated hero.
-     */
-    HeroDto update(HeroDto hero);
-
-    /**
-     * Persists a new hero.
-     *
-     * @param hero The hero to be persisted.
-     *
-     * @return true if the operation succeeded, false otherwise.
-     */
-    boolean save(HeroDto hero);
-
-    /**
-     * Deletes a hero.
-     *
-     * @param hero The hero to be deleted.
-     *
-     * @return true if the operation succeeded, false otherwise.
-     */
-    boolean delete(HeroDto hero);
-
-    /**
-     * Deletes a hero with given ID.
-     *
-     * @param id The ID of the hero to be deleted.
-     *
-     * @return true if the operation succeeded, false otherwise.
-     */
-    boolean deleteById(Long id);
+public interface HeroFacade extends BaseFacade<HeroDto> {
 
     /**
      * Finds all living heroes who are not currently assigned to an ongoing quest.
