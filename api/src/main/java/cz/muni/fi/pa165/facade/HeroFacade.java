@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.facade;
 
 import cz.muni.fi.pa165.dto.HeroDto;
+import cz.muni.fi.pa165.dto.MonsterDto;
 import cz.muni.fi.pa165.dto.QuestDto;
 import cz.muni.fi.pa165.dto.SkillDto;
 
@@ -55,4 +56,23 @@ public interface HeroFacade extends BaseFacade<HeroDto> {
      * @return A {@link List} of {@link Hero}es with the given skill.
      */
     List<HeroDto> findWithSkill(SkillDto skill);
+
+    /**
+     * Finds all skills of heroes on a given quest.
+     *
+     * @param quest The quest to search by.
+     *
+     * @return A {@link List} of all skills of the heroes on a given quest.
+     */
+    List<SkillDto> findAllSkillsOfHeroesOnQuest(QuestDto quest);
+
+    /**
+     * Computes a hero's rating against a given monster type.
+     *
+     * @param hero The hero for whom to compute the rating.
+     * @param monster The monster type against which to compute the rating.
+     *
+     * @return The rating of a given hero against a particular monster type.
+     */
+    int rateAgainstMonsterType(HeroDto hero, MonsterDto monster);
 }

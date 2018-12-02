@@ -4,13 +4,19 @@ import cz.muni.fi.pa165.heroes.dao.MonsterDAO;
 import cz.muni.fi.pa165.heroes.entity.Affinity;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
+import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.MonsterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 /**
  * @author Vojtech Krajnansky
@@ -18,16 +24,16 @@ import java.util.List;
 @Service
 public class MonsterServiceImpl implements MonsterService {
 
-    private final MonsterDAO monsterDao;
-
-    @Autowired
-    public MonsterServiceImpl(MonsterDAO monsterDao) {
-        this.monsterDao = monsterDao;
-    }
+    @Inject
+    private MonsterDAO monsterDao;
 
     @Override
-    public Monster findById(Long id) {
-        return monsterDao.findById(id);
+    public Monster findById(Long id) throws EntityNotFoundException {
+        Monster monster = monsterDao.findById(id);
+
+        if (monster == null) throw new EntityNotFoundException("Monster with given ID was not found");
+
+        return monster;
     }
 
     @Override
@@ -36,7 +42,8 @@ public class MonsterServiceImpl implements MonsterService {
     }
 
     @Override
-    public boolean save(Monster monster) {
+    public boolean save(Monster monster) throws EntityValidationException {
+        validate(monster);
         return monsterDao.save(monster);
     }
 
@@ -51,7 +58,8 @@ public class MonsterServiceImpl implements MonsterService {
     }
 
     @Override
-    public Monster update(Monster monster) {
+    public Monster update(Monster monster) throws EntityValidationException {
+        validate(monster);
         return monsterDao.update(monster);
     }
 
@@ -105,5 +113,24 @@ public class MonsterServiceImpl implements MonsterService {
         }
 
         return strengths;
+    }
+
+    private void validate(Monster monster) throws EntityValidationException {
+        if (monster.getName() == null
+            || monster.getHitpoints() <= 0
+            || monster.getDamage() <= 0
+            || monster.getSize() == null
+            || monster.getStrengths() == null
+            || monster.getWeaknesses() == null) {
+            throw new EntityValidationException("Monster is not in valid state.");
+        }
+
+        Set<Affinity> weaknessesSet = new HashSet<>(monster.getWeaknesses());
+        Set<Affinity> strengthsSet = new HashSet<>(monster.getStrengths());
+
+        if (weaknessesSet.size() < monster.getWeaknesses().size()
+            || strengthsSet.size() < monster.getStrengths().size()) {
+            throw new EntityValidationException("Monster is not in valid state.");
+        }
     }
 }

@@ -6,14 +6,19 @@ import cz.muni.fi.pa165.heroes.entity.Hero;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
 import cz.muni.fi.pa165.heroes.entity.Skill;
+import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 /**
  * @author Vojtech Krajnansky
@@ -21,16 +26,16 @@ import java.util.stream.Collectors;
 @Service
 public class HeroServiceImpl implements HeroService {
 
-    private final HeroDAO heroDao;
-
-    @Autowired
-    public HeroServiceImpl(HeroDAO heroDao) {
-        this.heroDao = heroDao;
-    }
+    @Inject
+    private HeroDAO heroDao;
 
     @Override
-    public Hero findById(Long id) {
-        return heroDao.findById(id);
+    public Hero findById(Long id) throws EntityNotFoundException {
+        Hero hero = heroDao.findById(id);
+
+        if (hero == null) throw new EntityNotFoundException("A hero with given ID was not found.");
+
+        return hero;
     }
 
     @Override
@@ -39,7 +44,8 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Override
-    public boolean save(Hero hero) {
+    public boolean save(Hero hero) throws EntityValidationException {
+        validate(hero);
         return heroDao.save(hero);
     }
 
@@ -54,7 +60,8 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Override
-    public Hero update(Hero hero) {
+    public Hero update(Hero hero) throws EntityValidationException {
+        validate(hero);
         return heroDao.update(hero);
     }
 
@@ -162,5 +169,25 @@ public class HeroServiceImpl implements HeroService {
         }
 
         return finalModifier;
+    }
+
+    private void validate(Hero hero) throws EntityValidationException {
+        if (hero.getName() == null
+            || hero.getHitpoints() <= 0
+            || hero.getDamage() <= 0
+            || hero.getGold() < 0
+            || hero.getMight() < 0
+            || hero.getAgility() < 0
+            || hero.getMagic() < 0
+            || hero.getSkills() == null
+            ) {
+            throw new EntityValidationException("Hero is not in valid state.");
+        }
+
+        Set<Skill> skillsSet = new HashSet<>(hero.getSkills());
+
+        if (skillsSet.size() < hero.getSkills().size()) {
+            throw new EntityValidationException("Hero is not in valid state.");
+        }
     }
 }
