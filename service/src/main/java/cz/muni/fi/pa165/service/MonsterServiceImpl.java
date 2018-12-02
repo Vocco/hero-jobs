@@ -7,16 +7,13 @@ import cz.muni.fi.pa165.heroes.entity.Quest;
 import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.MonsterService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.inject.Inject;
 
 /**
  * @author Vojtech Krajnansky
@@ -116,7 +113,8 @@ public class MonsterServiceImpl implements MonsterService {
     }
 
     private void validate(Monster monster) throws EntityValidationException {
-        if (monster.getName() == null
+        if (monster == null
+                || monster.getName() == null
             || monster.getHitpoints() <= 0
             || monster.getDamage() <= 0
             || monster.getSize() == null

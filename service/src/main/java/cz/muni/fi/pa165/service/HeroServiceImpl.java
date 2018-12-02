@@ -1,24 +1,18 @@
 package cz.muni.fi.pa165.service;
 
 import cz.muni.fi.pa165.heroes.dao.HeroDAO;
-import cz.muni.fi.pa165.heroes.entity.Affinity;
-import cz.muni.fi.pa165.heroes.entity.Hero;
-import cz.muni.fi.pa165.heroes.entity.Monster;
-import cz.muni.fi.pa165.heroes.entity.Quest;
-import cz.muni.fi.pa165.heroes.entity.Skill;
+import cz.muni.fi.pa165.heroes.entity.*;
 import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
-
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 /**
  * @author Vojtech Krajnansky
@@ -172,7 +166,8 @@ public class HeroServiceImpl implements HeroService {
     }
 
     private void validate(Hero hero) throws EntityValidationException {
-        if (hero.getName() == null
+        if (hero == null
+                || hero.getName() == null
             || hero.getHitpoints() <= 0
             || hero.getDamage() <= 0
             || hero.getGold() < 0
