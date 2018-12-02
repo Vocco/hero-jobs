@@ -9,6 +9,8 @@ import cz.muni.fi.pa165.heroes.entity.Hero;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
 import cz.muni.fi.pa165.heroes.entity.Skill;
+import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
 
@@ -33,26 +35,38 @@ public class HeroFacadeImpl implements HeroFacade {
 
     @Override
     public HeroDto findById(Long id) {
-        Hero hero = heroService.findById(id);
-        if (hero == null) {
+        try {
+            Hero hero = heroService.findById(id);
+            return beanMappingService.mapTo(hero, HeroDto.class);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
             return null;
         }
-
-        return beanMappingService.mapTo(hero, HeroDto.class);
     }
 
     @Override
     public HeroDto update(HeroDto hero) {
-        Hero updated = heroService
-            .update(beanMappingService.mapTo(hero, Hero.class));
+        try {
+            Hero updated = heroService
+                .update(beanMappingService.mapTo(hero, Hero.class));
 
-        return beanMappingService.mapTo(updated, HeroDto.class);
+            return beanMappingService.mapTo(updated, HeroDto.class);
+        } catch (EntityValidationException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     @Override
     public boolean save(HeroDto hero) {
-        return heroService
-            .save(beanMappingService.mapTo(hero, Hero.class));
+        try {
+            return heroService
+                .save(beanMappingService.mapTo(hero, Hero.class));
+        } catch (EntityValidationException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

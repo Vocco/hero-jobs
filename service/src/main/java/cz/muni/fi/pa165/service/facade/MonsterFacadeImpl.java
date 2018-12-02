@@ -7,6 +7,8 @@ import cz.muni.fi.pa165.facade.MonsterFacade;
 import cz.muni.fi.pa165.heroes.entity.Affinity;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
+import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.MonsterService;
 
@@ -31,26 +33,38 @@ public class MonsterFacadeImpl implements MonsterFacade {
 
     @Override
     public MonsterDto findById(Long id) {
-        Monster monster = monsterService.findById(id);
-        if (monster == null) {
+        try {
+            Monster monster = monsterService.findById(id);
+            return beanMappingService.mapTo(monster, MonsterDto.class);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
             return null;
         }
-
-        return beanMappingService.mapTo(monster, MonsterDto.class);
     }
 
     @Override
     public MonsterDto update(MonsterDto monster) {
-        Monster updated = monsterService
-            .update(beanMappingService.mapTo(monster, Monster.class));
+        try {
+            Monster updated = monsterService
+                .update(beanMappingService.mapTo(monster, Monster.class));
 
-        return beanMappingService.mapTo(updated, MonsterDto.class);
+            return beanMappingService.mapTo(updated, MonsterDto.class);
+        } catch (EntityValidationException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean save(MonsterDto monster) {
-        return monsterService
-            .save(beanMappingService.mapTo(monster, Monster.class));
+        try {
+            return monsterService
+                .save(beanMappingService.mapTo(monster, Monster.class));
+        } catch (EntityValidationException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     @Override
