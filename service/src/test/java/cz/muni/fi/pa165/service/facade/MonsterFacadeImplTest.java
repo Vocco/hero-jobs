@@ -99,8 +99,18 @@ public class MonsterFacadeImplTest {
         when(beanMappingService.mapTo(entity, MonsterDto.class))
                 .thenReturn(dto);
 
+        when(beanMappingService.mapTo(strengthDto, Affinity.class))
+                .thenReturn(strength);
+        when(beanMappingService.mapTo(weaknessDto, Affinity.class))
+                .thenReturn(weakness);
+
         entityList = Collections.singletonList(entity);
         dtoList = Collections.singletonList(dto);
+
+        when(beanMappingService.mapTo(entityList.get(0).getStrengths(), AffinityDto.class))
+                .thenReturn(dto.getStrengths());
+        when(beanMappingService.mapTo(entityList.get(0).getWeaknesses(), AffinityDto.class))
+                .thenReturn(dto.getWeaknesses());
 
         when(beanMappingService.mapTo(entityList, MonsterDto.class))
                 .thenReturn(dtoList);
@@ -189,6 +199,10 @@ public class MonsterFacadeImplTest {
         questDto.setLocation("location");
         questDto.setReward(100);
         questDto.setHeroLimit(1);
+
+        when(beanMappingService.mapTo(questDto, Quest.class))
+            .thenReturn(quest);
+
         when(service.findByQuest(quest)).thenReturn(entityList);
         assertEquals(facade.findByQuest(questDto), dtoList);
     }
@@ -213,8 +227,11 @@ public class MonsterFacadeImplTest {
 
         questDto.setMonsters(Collections.singletonList(questMonsterDto));
 
+        when(beanMappingService.mapTo(questDto, Quest.class))
+            .thenReturn(quest);
+
         when(service.findAllWeaknessesOfMonstersOnQuest(quest)).thenReturn(entityList.get(0).getWeaknesses());
-        assertEquals(facade.findByQuest(questDto), dtoList);
+        assertEquals(facade.findAllWeaknessesOfMonstersOnQuest(questDto), dto.getWeaknesses());
     }
 
     @Test
@@ -237,7 +254,10 @@ public class MonsterFacadeImplTest {
 
         questDto.setMonsters(Collections.singletonList(questMonsterDto));
 
-        when(service.findAllWeaknessesOfMonstersOnQuest(quest)).thenReturn(entityList.get(0).getStrengths());
-        assertEquals(facade.findByQuest(questDto), dtoList);
+        when(beanMappingService.mapTo(questDto, Quest.class))
+            .thenReturn(quest);
+
+        when(service.findAllStrengthsOfMonstersOnQuest(quest)).thenReturn(entityList.get(0).getStrengths());
+        assertEquals(facade.findAllStrengthsOfMonstersOnQuest(questDto), dto.getStrengths());
     }
 }
