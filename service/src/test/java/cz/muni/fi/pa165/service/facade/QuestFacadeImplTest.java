@@ -99,6 +99,13 @@ public class QuestFacadeImplTest {
     }
 
     @Test
+    public void findAll() {
+        when(service.findAll()).thenReturn(entityList);
+
+        assertEquals(facade.findAll(), dtoList);
+    }
+
+    @Test
     public void findById() throws EntityNotFoundException {
         when(service.findById(questDto.getId()))
             .thenReturn(questEntity);
@@ -107,7 +114,9 @@ public class QuestFacadeImplTest {
     }
 
     @Test
-    public void findByIdNotFound() {
+    public void findByIdNotFound() throws EntityNotFoundException {
+        when(service.findById(questDto.getId()))
+            .thenThrow(new EntityNotFoundException());
         assertNull(facade.findById(questDto.getId()));
     }
 
