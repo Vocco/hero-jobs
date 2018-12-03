@@ -3,7 +3,7 @@ package cz.muni.fi.pa165.facade;
 import cz.muni.fi.pa165.dto.HeroDto;
 import cz.muni.fi.pa165.dto.MonsterDto;
 import cz.muni.fi.pa165.dto.QuestDto;
-import cz.muni.fi.pa165.dto.QuestState;
+import cz.muni.fi.pa165.dto.QuestStateDto;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface QuestFacade extends BaseFacade<QuestDto> {
      *
      * @return A {@link List} of quests with given state.
      */
-    List<QuestDto> findByState(QuestState state);
+    List<QuestDto> findByState(QuestStateDto state);
 
     /**
      * Finds all quests in certain location.

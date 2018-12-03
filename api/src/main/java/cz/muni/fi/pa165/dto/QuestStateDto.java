@@ -1,6 +1,6 @@
 package cz.muni.fi.pa165.dto;
 
-public enum QuestState {
+public enum QuestStateDto {
     /**
      * Quest has been created and is available for heroes
      */
