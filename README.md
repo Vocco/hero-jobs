@@ -21,6 +21,6 @@ Seminar group PA165/05, team no. 3.
 
 Members:
 - Klang, Metodej (451570)
-- Strmen, Jakub (486347)
+- ~~Strmen, Jakub (486347)~~
 - Pavuk, Michal (487550)
 - Krajnansky, Vojtech (423126) - team lead
