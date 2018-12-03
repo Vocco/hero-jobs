@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.dto;
 
+import java.util.Objects;
+
 public class QuestMonsterDto {
     private QuestMonsterId id;
     private QuestDto quest;
@@ -50,5 +52,23 @@ public class QuestMonsterDto {
         public void setMonsterId(Long monsterId) {
             this.monsterId = monsterId;
         }
+    }
+
+    // EQUALS, HASH
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof  QuestMonsterDto)) return false;
+
+        QuestMonsterDto other = (QuestMonsterDto) o;
+        return Objects.equals(quest, other.quest)
+                && Objects.equals(monster, other.monster);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(quest, monster);
     }
 }

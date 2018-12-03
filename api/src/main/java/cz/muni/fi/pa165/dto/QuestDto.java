@@ -94,4 +94,43 @@ public class QuestDto extends BaseDto {
     public void setMonsters(List<QuestMonsterDto> monsters) {
         this.monsters = monsters;
     }
+
+    // EQUALS, HASH
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof QuestDto)) return false;
+
+        QuestDto other = (QuestDto) o;
+
+        if (!name.equals(other.getName())) return false;
+        if (!location.equals(other.getLocation())) return false;
+
+        if (reward != other.getReward()) return false;
+        if (heroLimit != other.getHeroLimit()) return false;
+        if (state != other.getState()) return false;
+        if (performanceEvaluation != other.getPerformanceEvaluation()) return false;
+
+        if (!assignedHeroes.equals(other.getAssignedHeroes())) return false;
+        if (!deadHeroes.equals(other.getAssignedHeroes())) return false;
+        if (!monsters.equals(other.getMonsters())) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 11 * result + name.hashCode();
+        result = 11 * result + location.hashCode();
+        result = 11 * result + reward;
+        result = 11 * result + heroLimit;
+        result = 11 * result + state.hashCode();
+        result = 11 * result + performanceEvaluation;
+        result = 11 * result + assignedHeroes.hashCode();
+        result = 11 * result + deadHeroes.hashCode();
+        result = 11 * result + monsters.hashCode();
+        return result;
+    }
 }
