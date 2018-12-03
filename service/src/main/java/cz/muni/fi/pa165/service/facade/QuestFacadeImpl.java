@@ -3,11 +3,12 @@ package cz.muni.fi.pa165.service.facade;
 import cz.muni.fi.pa165.dto.HeroDto;
 import cz.muni.fi.pa165.dto.MonsterDto;
 import cz.muni.fi.pa165.dto.QuestDto;
-import cz.muni.fi.pa165.dto.QuestState;
+import cz.muni.fi.pa165.dto.QuestStateDto;
 import cz.muni.fi.pa165.facade.QuestFacade;
 import cz.muni.fi.pa165.heroes.entity.Hero;
 import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
+import cz.muni.fi.pa165.heroes.entity.QuestState;
 import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
@@ -76,9 +77,9 @@ public class QuestFacadeImpl implements QuestFacade {
 	}
 
 	@Override
-	public List<QuestDto> findByState(QuestState state) {
+	public List<QuestDto> findByState(QuestStateDto state) {
 		try {
-			return beanMappingService.mapTo(questService.findByState(beanMappingService.mapTo(state, cz.muni.fi.pa165.heroes.entity.QuestState.class)), QuestDto.class);
+			return beanMappingService.mapTo(questService.findByState(beanMappingService.mapTo(state, QuestState.class)), QuestDto.class);
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			return null;
