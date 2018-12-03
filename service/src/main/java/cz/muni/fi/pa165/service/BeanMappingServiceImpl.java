@@ -10,13 +10,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * @author Vojtech Krajnansky
  */
 @Service
 public class BeanMappingServiceImpl implements BeanMappingService {
 
-    private Mapper dozer = new DozerBeanMapper();
+    @Inject
+    private Mapper dozer;
 
     public <T> List<T> mapTo(Collection<?> objects, Class<T> mappedClass) {
         List<T> mapped = new ArrayList<>();

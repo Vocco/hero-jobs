@@ -3,15 +3,25 @@ package cz.muni.fi.pa165.dto;
 import java.util.List;
 
 public class QuestDto extends BaseDto {
+
+    private Long id;
     private String name;
     private String location;
     private int reward;
     private int heroLimit;
-    private QuestState state;
+    private QuestStateDto state;
     private int performanceEvaluation;
     private List<HeroDto> assignedHeroes;
     private List<HeroDto> deadHeroes;
     private List<QuestMonsterDto> monsters;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -45,11 +55,11 @@ public class QuestDto extends BaseDto {
         this.heroLimit = heroLimit;
     }
 
-    public QuestState getState() {
+    public QuestStateDto getState() {
         return state;
     }
 
-    public void setState(QuestState state) {
+    public void setState(QuestStateDto state) {
         this.state = state;
     }
 

@@ -4,6 +4,9 @@ import java.util.List;
 
 public class HeroDto extends BaseDto {
 
+    private String name;
+    private int hitpoints;
+    private int damage;
     private int gold;
     private boolean isAlive;
     private int might;
@@ -11,6 +14,30 @@ public class HeroDto extends BaseDto {
     private int magic;
     private QuestDto quest;
     private List<SkillDto> skills;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getHitpoints() {
+        return hitpoints;
+    }
+
+    public void setHitpoints(int hitpoints) {
+        this.hitpoints = hitpoints;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
 
     public int getGold() {
         return gold;
