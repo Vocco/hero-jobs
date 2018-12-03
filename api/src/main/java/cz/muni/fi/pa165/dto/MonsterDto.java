@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MonsterDto extends BaseDto {
     private int hitpoints;
@@ -58,4 +59,32 @@ public class MonsterDto extends BaseDto {
     public void setDamage(int damage) {
         this.damage = damage;
     }
+
+    // EQUALS AND HASH
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof MonsterDto)) return false;
+
+        MonsterDto monster = (MonsterDto) o;
+        if ( !getName().equals(monster.getName()) ||
+                getHitpoints() != monster.getHitpoints() ||
+                getDamage() != monster.getDamage())
+            return false;
+
+        return Objects.equals(size, monster.size);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 17 * result + getName().hashCode();
+        result = 17 * result + getHitpoints();
+        result = 17 * result + getDamage();
+        result = 17 * result + getSize().hashCode();
+        return result;
+    }
+
 }
