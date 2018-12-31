@@ -5,6 +5,7 @@
 <%@ attribute name="script" fragment="true" %>
 <%@ attribute name="body" fragment="true" required="true" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="hero" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="quest" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
@@ -42,6 +43,7 @@
             <ul class="nav navbar-nav">
                 <li><hero:a href="/"><f:message key="index"/></hero:a></li>
                 <li><hero:a href="/heroes"><f:message key="heroes"/></hero:a></li>
+                <li><quest:a href="/quests"><f:message key="quests"/></quest:a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <security:authorize access="!isAuthenticated()">
