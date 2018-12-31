@@ -1,24 +1,15 @@
 package cz.muni.fi.pa165.data;
 
-import cz.muni.fi.pa165.heroes.entity.Affinity;
-import cz.muni.fi.pa165.heroes.entity.Hero;
-import cz.muni.fi.pa165.heroes.entity.Monster;
-import cz.muni.fi.pa165.heroes.entity.Quest;
-import cz.muni.fi.pa165.heroes.entity.Skill;
-import cz.muni.fi.pa165.service.exception.EntityValidationException;
+import cz.muni.fi.pa165.heroes.entity.*;
 import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
-import cz.muni.fi.pa165.service.interfaces.HeroService;
-import cz.muni.fi.pa165.service.interfaces.MonsterService;
-import cz.muni.fi.pa165.service.interfaces.QuestService;
-import cz.muni.fi.pa165.service.interfaces.SkillService;
-
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
+import cz.muni.fi.pa165.service.interfaces.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 @Component
 @Transactional
@@ -28,14 +19,16 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
     private MonsterService monsterService;
     private QuestService questService;
     private SkillService skillService;
+    private UserService userService;
 
 
     @Inject
-    public DataLoaderFacadeImpl(HeroService heroService, MonsterService monsterService, QuestService questService, SkillService skillService) {
+    public DataLoaderFacadeImpl(HeroService heroService, MonsterService monsterService, QuestService questService, SkillService skillService, UserService userService) {
         this.heroService = heroService;
         this.monsterService = monsterService;
         this.questService = questService;
         this.skillService = skillService;
+        this.userService = userService;
     }
 
 
@@ -64,6 +57,9 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
 
             Quest catacombs = getCatacombs(heavy, zombie);
             Quest farmersHell = getFarmersHell(headlessChicken);
+
+            User user = getUser(thor);
+            User admin = getAdmin();
         } catch (EntityValidationException | EntityNotFoundException e) {
 
         }
@@ -191,5 +187,27 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
 
         questService.save(hell);
         return hell;
+    }
+
+    private User getUser(Hero hero) throws EntityValidationException {
+        User user = new User();
+        user.setUsername("Thor");
+        user.setEmail("thor@valhalla.example.com");
+        user.setPasswordHash("7d445240c97cb8b39b22030981d77679608f91c7a4000e41a1794cde953a1846"); // thor
+        user.setManagedHero(hero);
+
+        userService.save(user);
+        return user;
+    }
+
+    private User getAdmin() throws EntityValidationException {
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setEmail("admin@example.com");
+        admin.setPasswordHash("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"); //admin
+        admin.setManagedHero(null);
+
+        userService.save(admin);
+        return admin;
     }
 }
