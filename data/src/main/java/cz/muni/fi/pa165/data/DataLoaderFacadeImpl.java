@@ -6,6 +6,7 @@ import cz.muni.fi.pa165.heroes.entity.Monster;
 import cz.muni.fi.pa165.heroes.entity.Quest;
 import cz.muni.fi.pa165.heroes.entity.Skill;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
+import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
 import cz.muni.fi.pa165.service.interfaces.MonsterService;
 import cz.muni.fi.pa165.service.interfaces.QuestService;
@@ -51,7 +52,6 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
             List<Skill> thorSkills = new ArrayList<>();
 
             heavySkills.add(fireBlast);
-            heavySkills.add(featherTickle);
             chickenSkills.add(featherTickle);
             thorSkills.add(lightningZap);
 
@@ -64,7 +64,7 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
 
             Quest catacombs = getCatacombs(heavy, zombie);
             Quest farmersHell = getFarmersHell(headlessChicken);
-        } catch (EntityValidationException e) {
+        } catch (EntityValidationException | EntityNotFoundException e) {
 
         }
     }
@@ -112,8 +112,12 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
         return heavy;
     }
 
-    private Hero getChicken(List<Skill> skills) throws EntityValidationException {
-        Hero chicken = new Hero("Chicken", 2, 1, 0, 1, 4, 0, skills);
+    private Hero getChicken(List<Skill> skills) throws EntityValidationException, EntityNotFoundException {
+        Skill featherTickle = skillService.findByName("Feather Tickle").get(0);
+        List<Skill> chskill = new ArrayList<>();
+        chskill.add(featherTickle);
+
+        Hero chicken = new Hero("Chicken", 2, 1, 0, 1, 4, 0, chskill);
 
         heroService.save(chicken);
         return chicken;

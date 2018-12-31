@@ -70,7 +70,7 @@ public class Quest implements Serializable {
     @JoinTable(name="quest_deadheroes")
     private List<Hero> deadHeroes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<QuestMonster> monsters = new ArrayList<>();
 
 
