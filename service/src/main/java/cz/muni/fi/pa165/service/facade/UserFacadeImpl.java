@@ -9,6 +9,8 @@ import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.UserService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 /**
  * @author Michal Pavuk
  */
+@Service
+@Transactional
 public class UserFacadeImpl implements UserFacade {
 
     @Inject
@@ -48,6 +52,16 @@ public class UserFacadeImpl implements UserFacade {
     public List<UserDto> findByHero(HeroDto hero) {
         try {
             return beanMappingService.mapTo(userService.findByHero(beanMappingService.mapTo(hero, Hero.class)), UserDto.class);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public UserDto authenticate(String username, String passwordHash) {
+        try {
+            return beanMappingService.mapTo(userService.authenticate(username, passwordHash), UserDto.class);
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return null;

@@ -89,6 +89,14 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Override
+    public User authenticate(String username, String passwordHash) throws EntityNotFoundException {
+        User user = this.findByName(username);
+        if (user.getPasswordHash().equals(passwordHash)) {
+            return user;
+        } else return null;
+    }
+
     private void validate(User user) throws EntityValidationException {
         if (user == null || user.getUsername() == null || user.getPasswordHash() == null) {
             throw new EntityValidationException("User is not in a valid state.");

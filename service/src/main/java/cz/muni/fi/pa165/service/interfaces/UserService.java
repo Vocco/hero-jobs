@@ -25,4 +25,6 @@ public interface UserService {
     User findByEmail(String email) throws EntityNotFoundException;
 
     List<User> findByHero(Hero hero) throws EntityNotFoundException;
+
+    User authenticate(String username, String passwordHash) throws EntityNotFoundException;
 }

@@ -23,4 +23,11 @@ public interface UserFacade extends BaseFacade<UserDto> {
      * @return list of users which manage the given hero
      */
     List<UserDto> findByHero(HeroDto hero);
+
+    /**
+     * @param username     username
+     * @param passwordHash SHA-256 hash of the password
+     * @return userdto if user was authenticated successfully, null otherwise
+     */
+    UserDto authenticate(String username, String passwordHash);
 }

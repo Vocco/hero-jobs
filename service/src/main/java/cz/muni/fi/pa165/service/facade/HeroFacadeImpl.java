@@ -13,12 +13,15 @@ import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
-
-import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
+@Service
+@Transactional
 public class HeroFacadeImpl implements HeroFacade {
 
     @Inject
@@ -30,7 +33,7 @@ public class HeroFacadeImpl implements HeroFacade {
     @Override
     public List<HeroDto> findAll() {
         return beanMappingService
-            .mapTo(heroService.findAll(), HeroDto.class);
+                .mapTo(heroService.findAll(), HeroDto.class);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class HeroFacadeImpl implements HeroFacade {
     public HeroDto update(HeroDto hero) {
         try {
             Hero updated = heroService
-                .update(beanMappingService.mapTo(hero, Hero.class));
+                    .update(beanMappingService.mapTo(hero, Hero.class));
 
             return beanMappingService.mapTo(updated, HeroDto.class);
         } catch (EntityValidationException e) {
@@ -62,7 +65,7 @@ public class HeroFacadeImpl implements HeroFacade {
     public boolean save(HeroDto hero) {
         try {
             return heroService
-                .save(beanMappingService.mapTo(hero, Hero.class));
+                    .save(beanMappingService.mapTo(hero, Hero.class));
         } catch (EntityValidationException e) {
             e.printStackTrace();
             return false;
@@ -72,7 +75,7 @@ public class HeroFacadeImpl implements HeroFacade {
     @Override
     public boolean delete(HeroDto hero) {
         return heroService
-            .delete(beanMappingService.mapTo(hero, Hero.class));
+                .delete(beanMappingService.mapTo(hero, Hero.class));
     }
 
     @Override
@@ -83,31 +86,31 @@ public class HeroFacadeImpl implements HeroFacade {
     @Override
     public List<HeroDto> findAvailable() {
         return beanMappingService
-            .mapTo(heroService.findAvailable(), HeroDto.class);
+                .mapTo(heroService.findAvailable(), HeroDto.class);
     }
 
     @Override
     public List<HeroDto> findAlive() {
         return beanMappingService
-            .mapTo(heroService.findAlive(), HeroDto.class);
+                .mapTo(heroService.findAlive(), HeroDto.class);
     }
 
     @Override
     public List<HeroDto> findByName(String name) {
         return beanMappingService
-            .mapTo(heroService.findByName(name), HeroDto.class);
+                .mapTo(heroService.findByName(name), HeroDto.class);
     }
 
     @Override
     public List<HeroDto> findDead() {
         return beanMappingService
-            .mapTo(heroService.findDead(), HeroDto.class);
+                .mapTo(heroService.findDead(), HeroDto.class);
     }
 
     @Override
     public List<HeroDto> findOnQuest(QuestDto quest) {
         List<Hero> heroes = heroService
-            .findOnQuest(beanMappingService.mapTo(quest, Quest.class));
+                .findOnQuest(beanMappingService.mapTo(quest, Quest.class));
 
         return beanMappingService.mapTo(heroes, HeroDto.class);
     }
@@ -115,7 +118,7 @@ public class HeroFacadeImpl implements HeroFacade {
     @Override
     public List<HeroDto> findWithSkill(SkillDto skill) {
         List<Hero> heroes = heroService
-            .findWithSkill(beanMappingService.mapTo(skill, Skill.class));
+                .findWithSkill(beanMappingService.mapTo(skill, Skill.class));
 
         return beanMappingService.mapTo(heroes, HeroDto.class);
     }
@@ -123,9 +126,9 @@ public class HeroFacadeImpl implements HeroFacade {
     @Override
     public List<SkillDto> findAllSkillsOfHeroesOnQuest(QuestDto quest) {
         List<Skill> skills = heroService
-            .findAllSkillsOfHeroesOnQuest(
-                beanMappingService.mapTo(quest, Quest.class)
-            );
+                .findAllSkillsOfHeroesOnQuest(
+                        beanMappingService.mapTo(quest, Quest.class)
+                );
 
         return beanMappingService.mapTo(skills, SkillDto.class);
     }
@@ -133,9 +136,9 @@ public class HeroFacadeImpl implements HeroFacade {
     @Override
     public int rateAgainstMonsterType(HeroDto hero, MonsterDto monster) {
         return heroService
-            .rateAgainstMonsterType(
-                beanMappingService.mapTo(hero, Hero.class),
-                beanMappingService.mapTo(monster, Monster.class)
-            );
+                .rateAgainstMonsterType(
+                        beanMappingService.mapTo(hero, Hero.class),
+                        beanMappingService.mapTo(monster, Monster.class)
+                );
     }
 }
