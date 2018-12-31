@@ -14,27 +14,28 @@
     <artifactId>web</artifactId>
     <packaging>war</packaging>
 
-
     <build>
         <defaultGoal>cargo:run</defaultGoal>
         <finalName>pa165</finalName>
         <plugins>
-            <!--  embedded tomcat 8 -->
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
                 <version>1.7.0</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat9x</containerId>
+                    </container>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
-
-
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-api</artifactId>
-            <version>8.0.23</version>
+            <version>9.0.12</version>
             <scope>provided</scope>
         </dependency>
 
@@ -65,11 +66,10 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>5.1.0.RELEASE</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
+            <artifactId>spring-security-taglibs</artifactId>
             <version>5.1.0.RELEASE</version>
         </dependency>
 
@@ -78,6 +78,13 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <dependency>
             <groupId>cz.muni.fi.pa165</groupId>
             <artifactId>api</artifactId>
