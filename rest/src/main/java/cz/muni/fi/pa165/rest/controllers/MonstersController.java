@@ -38,4 +38,38 @@ public class MonstersController {
 
         return monster;
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public final boolean deleteMonster(@PathVariable Long id) throws NotFoundException {
+        boolean success = monsters.deleteById(id);
+
+        if (!success) {
+            throw new NotFoundException();
+        }
+
+        return success;
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public final boolean createMonster(@RequestBody MonsterDto monster) throws ConflictException {
+        boolean success = monsters.save(monster);
+
+        if (!success) {
+            throw new ConflictException();
+        }
+
+        return success;
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public final MonsterDto updateMonster(@RequestBody MonsterDto monster) throws NotFoundException {
+        try {
+            return monsters.update(monster);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new NotFoundException();
+        }
+    }
 }

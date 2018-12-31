@@ -137,7 +137,7 @@ public class Monster extends Actor {
     }
 
     public List<Affinity> getStrengths() {
-        return Collections.unmodifiableList(strengths);
+        return strengths;
     }
 
     public void setStrengths(List<Affinity> strengths) {
@@ -146,7 +146,7 @@ public class Monster extends Actor {
     }
 
     public List<Affinity> getWeaknesses() {
-        return Collections.unmodifiableList(weaknesses);
+        return weaknesses;
     }
 
     public void setWeaknesses(List<Affinity> weaknesses) {

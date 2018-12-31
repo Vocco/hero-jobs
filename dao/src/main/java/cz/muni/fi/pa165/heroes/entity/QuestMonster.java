@@ -198,6 +198,14 @@ public class QuestMonster {
             return monsterId;
         }
 
+        public void setQuestId(Long id) {
+            questId = id;
+        }
+
+        public void setMonsterId(Long id) {
+            monsterId = id;
+        }
+
 
         // EQUALS, HASH, TOSTRING
 
