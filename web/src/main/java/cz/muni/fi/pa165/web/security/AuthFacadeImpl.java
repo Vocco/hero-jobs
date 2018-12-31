@@ -3,6 +3,11 @@ package cz.muni.fi.pa165.web.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
 public class AuthFacadeImpl implements AuthFacade {
     @Override
     public boolean isAuthenticated() {

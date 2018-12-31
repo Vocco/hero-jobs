@@ -20,6 +20,7 @@ import javax.inject.Inject;
  */
 
 @Controller
+@RequestMapping("/quest")
 public class QuestController {
 
 	@Inject

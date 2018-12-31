@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -13,6 +15,7 @@ import java.io.Serializable;
  * @author Michal Pavúk
  */
 @Entity
+@Table(name="users")
 public class User implements Serializable {
 
     @Id
@@ -28,6 +31,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String passwordHash;
 
+    @OneToOne
     private Hero managedHero;
 
     public Long getId() {

@@ -6,6 +6,7 @@ import cz.muni.fi.pa165.heroes.entity.User;
 import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.UserService;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * @author Michal Pavuk
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     @Inject

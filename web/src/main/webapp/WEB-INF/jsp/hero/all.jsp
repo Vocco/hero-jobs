@@ -43,7 +43,7 @@
                         <c:if test="${!hero.alive}">
                             <td><span class="glyphicon glyphicon-exclamation-sign"></span></td>
                         </c:if>
-                        <td><c:out value="${hero.name}"/></td>
+                        <td><c:out value="${hero.getName}"/></td>
 
                         <td><c:out value="${hero.gold}"/></td>
                         <td><c:out value="${hero.hitpoints}"/></td>

@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.heroes.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import javax.persistence.Id;
  * @author Michal Pavúk
  */
 @Entity
-public class Affinity {
+public class Affinity implements Serializable {
 
     @Id
     @GeneratedValue
