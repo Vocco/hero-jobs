@@ -5,5 +5,4 @@ package cz.muni.fi.pa165.rest;
  */
 public abstract class ApiUris {
     public static final String ROOT_MONSTERS = "/monsters";
-    public static final String ROOT_QUESTS = "/quests";
 }

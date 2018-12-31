@@ -20,7 +20,6 @@ public class MainController {
         Map<String, String> resources = new HashMap<>();
 
         resources.put("monsters_root_uri", ApiUris.ROOT_MONSTERS);
-        resources.put("quests_root_uri", ApiUris.ROOT_QUESTS);
 
         return Collections.unmodifiableMap(resources);
 
