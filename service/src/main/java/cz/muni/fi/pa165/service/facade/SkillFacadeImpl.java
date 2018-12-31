@@ -9,6 +9,11 @@ import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.SkillService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -16,6 +21,8 @@ import java.util.List;
 /**
  * @author Metodej Klang
  */
+@Service
+@Transactional
 public class SkillFacadeImpl implements SkillFacade {
 
 	@Inject

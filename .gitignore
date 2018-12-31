@@ -2,9 +2,12 @@
 *.class
 
 # Target directories
+target
 dao/target
 api/target
 service/target
+rest/target
+data/target
 
 # Log file
 *.log

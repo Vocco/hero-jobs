@@ -12,11 +12,14 @@ import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.MonsterService;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 
-
+@Service
+@Transactional
 public class MonsterFacadeImpl implements MonsterFacade {
 
     @Inject
@@ -28,7 +31,7 @@ public class MonsterFacadeImpl implements MonsterFacade {
     @Override
     public List<MonsterDto> findAll() {
         return beanMappingService
-            .mapTo(monsterService.findAll(), MonsterDto.class);
+                .mapTo(monsterService.findAll(), MonsterDto.class);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class MonsterFacadeImpl implements MonsterFacade {
     public MonsterDto update(MonsterDto monster) {
         try {
             Monster updated = monsterService
-                .update(beanMappingService.mapTo(monster, Monster.class));
+                    .update(beanMappingService.mapTo(monster, Monster.class));
 
             return beanMappingService.mapTo(updated, MonsterDto.class);
         } catch (EntityValidationException e) {
@@ -59,7 +62,7 @@ public class MonsterFacadeImpl implements MonsterFacade {
     public boolean save(MonsterDto monster) {
         try {
             return monsterService
-                .save(beanMappingService.mapTo(monster, Monster.class));
+                    .save(beanMappingService.mapTo(monster, Monster.class));
         } catch (EntityValidationException e) {
             e.printStackTrace();
             return false;
@@ -70,7 +73,7 @@ public class MonsterFacadeImpl implements MonsterFacade {
     @Override
     public boolean delete(MonsterDto monster) {
         return monsterService
-            .delete(beanMappingService.mapTo(monster, Monster.class));
+                .delete(beanMappingService.mapTo(monster, Monster.class));
     }
 
     @Override
@@ -81,35 +84,35 @@ public class MonsterFacadeImpl implements MonsterFacade {
     @Override
     public List<MonsterDto> findWithStrength(AffinityDto strength) {
         List<Monster> monsters = monsterService
-            .findWithStrength(
-                beanMappingService.mapTo(strength, Affinity.class)
-            );
+                .findWithStrength(
+                        beanMappingService.mapTo(strength, Affinity.class)
+                );
 
         return beanMappingService
-            .mapTo(monsters, MonsterDto.class);
+                .mapTo(monsters, MonsterDto.class);
     }
 
     @Override
     public List<MonsterDto> findWithWeakness(AffinityDto weakness) {
         List<Monster> monsters = monsterService
-            .findWithWeakness(
-                beanMappingService.mapTo(weakness, Affinity.class)
-            );
+                .findWithWeakness(
+                        beanMappingService.mapTo(weakness, Affinity.class)
+                );
 
         return beanMappingService
-            .mapTo(monsters, MonsterDto.class);
+                .mapTo(monsters, MonsterDto.class);
     }
 
     @Override
     public List<MonsterDto> findWithSize(String size) {
         return beanMappingService
-            .mapTo(monsterService.findWithSize(size), MonsterDto.class);
+                .mapTo(monsterService.findWithSize(size), MonsterDto.class);
     }
 
     @Override
     public List<MonsterDto> findByQuest(QuestDto quest) {
         List<Monster> monsters = monsterService
-            .findByQuest(beanMappingService.mapTo(quest, Quest.class));
+                .findByQuest(beanMappingService.mapTo(quest, Quest.class));
 
         return beanMappingService.mapTo(monsters, MonsterDto.class);
     }
@@ -117,20 +120,20 @@ public class MonsterFacadeImpl implements MonsterFacade {
     @Override
     public List<AffinityDto> findAllWeaknessesOfMonstersOnQuest(QuestDto quest) {
         List<Affinity> weaknesses = monsterService
-            .findAllWeaknessesOfMonstersOnQuest(
-                beanMappingService.mapTo(quest, Quest.class)
-            );
+                .findAllWeaknessesOfMonstersOnQuest(
+                        beanMappingService.mapTo(quest, Quest.class)
+                );
 
         return beanMappingService.mapTo(weaknesses, AffinityDto.class);
     }
 
-	  @Override
-	  public List<AffinityDto> findAllStrengthsOfMonstersOnQuest(QuestDto quest) {
+    @Override
+    public List<AffinityDto> findAllStrengthsOfMonstersOnQuest(QuestDto quest) {
         List<Affinity> strengths = monsterService
-            .findAllStrengthsOfMonstersOnQuest(
-                beanMappingService.mapTo(quest, Quest.class)
-            );
+                .findAllStrengthsOfMonstersOnQuest(
+                        beanMappingService.mapTo(quest, Quest.class)
+                );
 
         return beanMappingService.mapTo(strengths, AffinityDto.class);
-	  }
+    }
 }
