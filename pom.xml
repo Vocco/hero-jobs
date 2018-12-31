@@ -22,5 +22,6 @@
     <module>dao</module>
     <module>api</module>
     <module>service</module>
+    <module>web</module>
   </modules>
 </project>
