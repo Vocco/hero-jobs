@@ -9,9 +9,12 @@ import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.QuestService;
 
+import org.springframework.stereotype.Service;
+
 import javax.inject.Inject;
 import java.util.List;
 
+@Service
 public class QuestServiceImpl implements QuestService {
 
 	@Inject
