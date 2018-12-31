@@ -184,9 +184,6 @@ public class QuestMonster {
         private QuestMonsterId() {}
 
         public QuestMonsterId(Long questId, Long monsterId) {
-            if (questId == null) throw new IllegalArgumentException("QuestId can't be null");
-            if (monsterId == null) throw new IllegalArgumentException("MonsterId can't be null");
-
             this.questId = questId;
             this.monsterId = monsterId;
         }
@@ -199,6 +196,14 @@ public class QuestMonster {
 
         public Long getMonsterId() {
             return monsterId;
+        }
+
+        public void setQuestId(Long id) {
+            questId = id;
+        }
+
+        public void setMonsterId(Long id) {
+            monsterId = id;
         }
 
 

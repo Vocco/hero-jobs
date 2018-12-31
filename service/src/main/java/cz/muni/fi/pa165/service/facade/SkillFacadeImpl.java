@@ -12,6 +12,9 @@ import cz.muni.fi.pa165.service.interfaces.SkillService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.inject.Inject;
 import java.util.List;
 

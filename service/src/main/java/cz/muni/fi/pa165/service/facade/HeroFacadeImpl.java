@@ -13,12 +13,12 @@ import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
-
 
 @Service
 @Transactional
