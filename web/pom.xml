@@ -95,10 +95,10 @@
             <artifactId>service</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>cz.muni.fi.pa165</groupId>-->
-        <!--<artifactId>data</artifactId>-->
-        <!--<version>${project.parent.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>cz.muni.fi.pa165</groupId>
+            <artifactId>data</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 </project>
