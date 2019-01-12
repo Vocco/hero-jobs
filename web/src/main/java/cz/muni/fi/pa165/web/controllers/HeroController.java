@@ -33,6 +33,11 @@ public class HeroController {
     @Inject
     private UserFacade userFacade;
 
+    @RequestMapping("/")
+    public String defaultPage() {
+        return "redirect:/hero/all";
+    }
+
     @RequestMapping("/all")
     public String list(Model model) {
         model.addAttribute("heroes", heroFacade.findAll());

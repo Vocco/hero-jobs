@@ -29,6 +29,11 @@ public class QuestController {
 	@Inject
 	private AuthFacade authFacade;
 
+    @RequestMapping("/")
+    public String defaultPage() {
+        return "redirect:/quest/all";
+    }
+
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public String allQuests(Model model) {
 		model.addAttribute("quests", questFacade.findAll());

@@ -5,8 +5,6 @@
 <%@ attribute name="script" fragment="true" %>
 <%@ attribute name="body" fragment="true" required="true" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="hero" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="monster" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="quest" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
@@ -19,10 +17,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><c:out value="${title}"/></title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/rpg-awesome/css/rpg-awesome.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 
     <jsp:invoke fragment="head"/>
@@ -43,9 +44,9 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><hero:a href="/"><f:message key="index"/></hero:a></li>
-                <li><hero:a href="/heroes"><f:message key="heroes"/></hero:a></li>
-                <li><monster:a href="/monsters"><f:message key="monsters"/></monster:a></li>
-                <li><quest:a href="/quests"><f:message key="quests"/></quest:a></li>
+                <li><hero:a href="/hero/all"><f:message key="heroes"/></hero:a></li>
+                <li><hero:a href="/monster/all"><f:message key="monsters"/></hero:a></li>
+                <li><hero:a href="/quest/all"><f:message key="quests"/></hero:a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <security:authorize access="!isAuthenticated()">

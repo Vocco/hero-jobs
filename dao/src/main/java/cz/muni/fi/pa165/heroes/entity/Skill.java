@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -58,7 +57,7 @@ public class Skill implements Serializable {
     }
 
     public List<Affinity> getAffinities() {
-        return Collections.unmodifiableList(affinities);
+        return affinities;
     }
 
     public void setAffinities(Affinity... affinities) {

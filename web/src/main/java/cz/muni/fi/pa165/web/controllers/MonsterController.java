@@ -1,7 +1,6 @@
 package cz.muni.fi.pa165.web.controllers;
 
 import cz.muni.fi.pa165.dto.MonsterDto;
-import cz.muni.fi.pa165.dto.UserDto;
 import cz.muni.fi.pa165.facade.MonsterFacade;
 import cz.muni.fi.pa165.facade.UserFacade;
 import cz.muni.fi.pa165.web.security.AuthFacade;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * @author Vojtech Krajnansky
@@ -32,6 +30,11 @@ public class MonsterController {
 
     @Inject
     private UserFacade userFacade;
+
+    @RequestMapping("/")
+    public String defaultPage() {
+        return "redirect:/monster/all";
+    }
 
     @RequestMapping("/all")
     public String list(Model model) {

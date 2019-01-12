@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/login").usernameParameter("username").passwordParameter("password")
+                .loginPage("/login").usernameParameter("username").passwordParameter("password").loginProcessingUrl("/pa165/login")
                 .defaultSuccessUrl("/", true).failureUrl("/login")
                 .permitAll()
                 .and()
@@ -36,8 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .permitAll()
-                .and()
-                .csrf().disable();
+                .and().csrf().disable();
     }
 
     @Override
