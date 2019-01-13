@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * Affinity describes a relation of an actor to an effect of a skill.
@@ -27,6 +28,9 @@ public class Affinity implements Serializable {
     @Column(nullable = false)
     private String name;
     private int level;
+
+    @ManyToOne
+    private Monster monster;
 
     public Affinity() {}
 
@@ -59,6 +63,14 @@ public class Affinity implements Serializable {
     public void setLevel(int level) {
         if (level <= 0) throw new IllegalArgumentException("Affinity level must be greater than zero.");
         this.level = level;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
     }
 
     @Override

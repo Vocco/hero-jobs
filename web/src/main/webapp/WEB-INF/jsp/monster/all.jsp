@@ -24,19 +24,20 @@
             <tr>
                 <th><f:message key="monster.name"/></th>
 
-                <th><f:message key="monster.size"/></th>
-                <th><f:message key="monster.hitpoints"/></th>
-                <th><f:message key="monster.damage"/></th>
+                <th><i class="ra ra-muscle-up ra-fw"></i>&nbsp;<f:message key="monster.size"/></th>
+                <th><i class="ra ra-health ra-fw"></i>&nbsp;<f:message key="monster.hitpoints"/></th>
+                <th><i class="ra ra-crossed-swords ra-fw">&nbsp;</i><f:message key="monster.damage"/></th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${monsters}" var="monster">
                     <tr class="clickable-row" data-href="/monster/view/${monster.id}">
-                        <td><c:out value="${monster.name}"/></td>
 
-                        <td><f:message key="${monster.size}"/></td>
-                	<td><f:message key="${monster.hitpoints}"/></td>
-                	<td><f:message key="${monster.damage}"/></td>
+                        <td><monster:a href="/monster/view/${monster.id}"><c:out value="${monster.name}"/></monster:a></td>
+
+                        <td><c:out value="${monster.size}"/></td>
+                	<td><c:out value="${monster.hitpoints}"/></td>
+                	<td><c:out value="${monster.damage}"/></td>
                     </tr>
 
                 </c:forEach>
