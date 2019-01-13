@@ -4,6 +4,7 @@ import cz.muni.fi.pa165.dto.HeroDto;
 import cz.muni.fi.pa165.dto.UserDto;
 import cz.muni.fi.pa165.facade.HeroFacade;
 import cz.muni.fi.pa165.facade.UserFacade;
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.web.security.AuthFacade;
 import cz.muni.fi.pa165.web.security.Role;
 import org.springframework.stereotype.Controller;
@@ -50,7 +51,7 @@ public class HeroController {
         model.addAttribute("hero", hero);
         model.addAttribute("quest", hero.getQuest());
         model.addAttribute("skills", hero.getSkills());
-        model.addAttribute("canEdit", canEdit(hero));
+        model.addAttribute("canEdit", true);
         return "hero/view";
     }
 
@@ -86,8 +87,15 @@ public class HeroController {
             return "hero/edit";
         }
 
-        heroFacade.save(hero);
+        heroFacade.update(hero);
         return "redirect:/hero/all";
+    }
+
+    private void validate(HeroDto hero) throws EntityValidationException {
+        if (hero == null
+                || hero.getName() == null) {
+            throw new EntityValidationException("Hero is not in valid state.");
+        }
     }
 
     private boolean canEdit(HeroDto hero) {

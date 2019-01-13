@@ -19,7 +19,7 @@
                     </hero:a>
             </div>
         </sec:authorize>
-        <table class="table">
+        <table class="table" align="center">
             <thead>
             <tr>
                 <th><f:message key="hero.status"/></th>
@@ -34,7 +34,7 @@
                 <th><i class="ra ra-aura ra-fw"></i>&nbsp;<f:message key="hero.magic"/></th>
             </tr>
             </thead>
-            <tbody align="center">
+            <tbody>
             <c:forEach items="${heroes}" var="hero">
                     <tr class="clickable-row" data-href="/hero/view/${hero.id}">
                         <c:if test="${hero.alive}">

@@ -8,25 +8,34 @@
 <hero:template title="${title}">
     <jsp:attribute name="body">
     <div class="container">
-        <h1>${hero.name}</h1>
+        <h2>${hero.name}</h2>
         <c:if test="${canEdit}">
                 <div class="row">
-                    <my:a href="/hero/edit/${hero.id}" class="btn btn-primary">
+                    <hero:a href="/hero/edit/${hero.id}" class="btn btn-primary">
                         <span class="glyphicon glyphicon-pencil"></span>
                         <f:message key="edit"/>
-                    </my:a>
+                    </hero:a>
                 </div>
             </c:if>
-        <ul>
-            <li><f:message key="hero.gold"/>: ${hero.gold}</li>
-            <li><f:message key="hero.status"/>: ${hero.alive}</li>
-            <li><f:message key="hero.hitpoints"/>: ${hero.hitpoints}</li>
-            <li><f:message key="hero.damage"/>: ${hero.damage}</li>
-            <li><f:message key="hero.might"/>: ${hero.might}</li>
-            <li><f:message key="hero.agility"/>: ${hero.agility}</li>
-            <li><f:message key="hero.magic"/>: ${hero.magic}</li>
-            <li><f:message key="hero.currentQuest"/>: <hero:a
-                    href="/quest/view/${hero.quest.id}">${hero.quest.name}</hero:a></li>
+        <ul style="list-style: none;">
+            <li><i class="ra ra-fw ra-gold-bar"></i>&nbsp;<f:message key="hero.gold"/>: ${hero.gold}</li>
+            <li><i class="ra ra-fw ra-hearts"></i>&nbsp;<f:message key="hero.status"/>:
+                <c:if test="${hero.alive}"><f:message key="hero.alive"/></c:if>
+                <c:if test="${!hero.alive}"><f:message key="hero.dead"/></c:if>
+            </li>
+            <li><i class="ra ra-fw ra-health"></i>&nbsp;<f:message key="hero.hitpoints"/>: ${hero.hitpoints}</li>
+            <li><i class="ra ra-fw ra-crossed-swords"></i>&nbsp;<f:message key="hero.damage"/>: ${hero.damage}</li>
+            <li><i class="ra ra-fw ra-muscle-up"></i>&nbsp;<f:message key="hero.might"/>: ${hero.might}</li>
+            <li><i class="ra ra-fw ra-player-dodge"></i>&nbsp;<f:message key="hero.agility"/>: ${hero.agility}</li>
+            <li><i class="ra ra-fw ra-aura"></i>&nbsp;<f:message key="hero.magic"/>: ${hero.magic}</li>
+            <li><i class="ra ra-fw ra-quill-ink"></i>&nbsp;<f:message key="hero.currentQuest"/>:
+                <c:if test="${hero.quest != null}">
+                    <hero:a href="/quest/view/${hero.quest.id}">${hero.quest.name}</hero:a>
+                </c:if>
+                <c:if test="${hero.quest == null}">
+                    None
+                </c:if>
+            </li>
         </ul>
         <h2><f:message key="skills"/></h2>
         <ol>

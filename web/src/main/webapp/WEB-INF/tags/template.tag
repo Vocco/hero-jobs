@@ -55,7 +55,7 @@
 
                 <security:authorize access="isAuthenticated()">
                     <li><a><security:authentication property="principal"/></a></li>
-                    <li><hero:a href="/logout"><f:message key="sign_in"/></hero:a></li>
+                    <li><hero:a href="/logout"><f:message key="log_out"/></hero:a></li>
                 </security:authorize>
             </ul>
         </div>

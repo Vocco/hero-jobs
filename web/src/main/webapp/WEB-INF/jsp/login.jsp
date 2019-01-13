@@ -10,7 +10,7 @@
 
     <div class="container">
         <div class="col-md-5 offset-md-3">
-            <form method="POST" role="form" action="${pageContext.request.contextPath}/login">
+            <form method="POST" role="form">
                 <div class="form-group">
                     <label for="username"><f:message key="username"/>:</label>
                     <input type="text" name="username" id="username" class="form-control" required/>
