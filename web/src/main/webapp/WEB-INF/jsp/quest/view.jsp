@@ -12,14 +12,14 @@
     <jsp:attribute name="body">
     <div class="container">
         <h1>${quest.name}</h1>
-        <sec:authorize access="hasAuthority('ADMIN')">
+        <c:if test="${canEdit}">
                 <div class="row">
                     <quest:a href="/quest/edit/${quest.id}" class="btn btn-primary">
                         <span class="glyphicon glyphicon-pencil"></span>
                         <f:message key="edit" />
                     </quest:a>
                 </div>
-        </sec:authorize>
+        </c:if>
         <ul>
             <li><f:message key="quest.location" />: ${quest.location}</li>
             <li><f:message key="quest.reward" />: ${quest.reward}</li>
@@ -41,8 +41,8 @@
         </ol>
         <h2><f:message key="monsters" /></h2>
         <ol>
-        <c:forEach items="${quest.monsters}" var="monster">
-            <li>${monster.name}</li>
+        <c:forEach items="${quest.monsters}" var="questmonster">
+            <li>${questmonster.monster.name} - ${questmonster.monster.monsterCount}</li>
         </c:forEach>
         </ol>
 
