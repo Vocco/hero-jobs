@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.web.controllers;
 import cz.muni.fi.pa165.dto.QuestDto;
 import cz.muni.fi.pa165.dto.QuestStateDto;
 import cz.muni.fi.pa165.facade.QuestFacade;
+import cz.muni.fi.pa165.heroes.entity.QuestState;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.web.security.AuthFacade;
 import cz.muni.fi.pa165.web.security.Role;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 
 /**
  * @author Metodej Klang
@@ -74,6 +76,7 @@ public class QuestController {
 
 		questStateEdited = quest.getState();
 		model.addAttribute("queststate", questStateEdited);
+		model.addAttribute("statusOptions", Arrays.stream(QuestState.values()).map(Enum::name).toArray());
 		if (authFacade.hasRole(Role.ADMIN)) {
 			model.addAttribute("quest", quest);
 			return "quest/edit";
@@ -88,34 +91,15 @@ public class QuestController {
 
     questDto.setState(questStateEdited);
 
-    if (questDto.getName() == null || questDto.getName() == "") {
-        nameErr = true;
-    } else {
-        nameErr = false;
-    }
+		nameErr = questDto.getName() == null || questDto.getName().equals("");
+		locErr = questDto.getLocation() == null || questDto.getLocation().equals("");
+		rewardErr = questDto.getReward() < 1;
+		perfErr = questDto.getPerformanceEvaluation() < 0 || questDto.getPerformanceEvaluation() > 5;
 
-    if (questDto.getLocation() == null || questDto.getLocation() == "") {
-        locErr = true;
-    } else {
-        locErr = false;
-    }
-
-    if (questDto.getReward() < 1) {
-        rewardErr = true;
-    } else {
-        rewardErr = false;
-    }
-
-    if (questDto.getPerformanceEvaluation() < 0 || questDto.getPerformanceEvaluation() > 5) {
-        perfErr = true;
-    } else {
-        perfErr = false;
-    }
-
-    model.addAttribute("nameErr", nameErr);
-    model.addAttribute("locErr", locErr);
-    model.addAttribute("rewardErr", rewardErr);
-    model.addAttribute("perfErr", perfErr);
+		model.addAttribute("nameErr", nameErr);
+		model.addAttribute("locErr", locErr);
+		model.addAttribute("rewardErr", rewardErr);
+		model.addAttribute("perfErr", perfErr);
 
 		if (nameErr || locErr || rewardErr || perfErr) {
 		    return "quest/edit";
@@ -125,7 +109,7 @@ public class QuestController {
 			return "quest/edit";
 		}
 
-		questFacade.save(questDto);
+		questFacade.update(questDto);
 		return "redirect:/quest/all";
 	}
 

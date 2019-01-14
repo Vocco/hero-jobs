@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ tag pageEncoding="utf-8" dynamic-attributes="dynattrs" trimDirectiveWhitespaces="true" %>
 <%@ attribute name="title" required="false" %>
+<%@ attribute name="heading" required="false" %>
 <%@ attribute name="head" fragment="true" %>
 <%@ attribute name="script" fragment="true" %>
 <%@ attribute name="body" fragment="true" required="true" %>
@@ -65,9 +66,9 @@
 <div class="container">
 
     <!-- page title -->
-    <c:if test="${not empty title}">
+    <c:if test="${not empty heading}">
         <div class="page-header">
-            <h1><c:out value="${title}"/></h1>
+            <h1><c:out value="${heading}"/></h1>
         </div>
     </c:if>
 
@@ -75,7 +76,7 @@
     <jsp:invoke fragment="body"/>
 
     <footer class="footer">
-        <p>&copy;&nbsp;<%=java.time.Year.now().toString()%><f:message key="footer"/></p>
+        <p>&copy;&nbsp;<%=java.time.Year.now().toString()%>&nbsp;<f:message key="footer"/></p>
     </footer>
 </div>
 <jsp:invoke fragment="script"/>

@@ -11,7 +11,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <f:message var="title" key="quests"/>
 
-<quest:template title="${title}">
+<quest:template title="${title}" heading="${title}">
     <jsp:attribute name="body">
     <div class="container">
         <sec:authorize access="hasAuthority('ADMIN')">
@@ -26,10 +26,10 @@
             <thead>
             <tr>
                 <th><f:message key="quest.name"/></th>
-                <th><f:message key="quest.location"/></th>
-                <th><f:message key="quest.reward"/></th>
-                <th><f:message key="quest.heroLimit"/></th>
-                <th><f:message key="quest.performanceEvaluation"/></th>
+                <th><span class="glyphicon glyphicon-map-marker"></span>&nbsp;<f:message key="quest.location"/></th>
+                <th><i class="ra ra-fw ra-gem"></i>&nbsp;<f:message key="quest.reward"/></th>
+                <th><i class="ra ra-fw ra-double-team"></i>&nbsp;<f:message key="quest.heroLimit"/></th>
+                <th><i class="ra ra-fw ra-crown"></i>&nbsp;<f:message key="quest.performanceEvaluation"/></th>
             </tr>
             </thead>
             <tbody>

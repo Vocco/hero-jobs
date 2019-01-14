@@ -1,7 +1,7 @@
 package cz.muni.fi.pa165.web.controllers;
 
-import cz.muni.fi.pa165.dto.MonsterDto;
 import cz.muni.fi.pa165.dto.AffinityDto;
+import cz.muni.fi.pa165.dto.MonsterDto;
 import cz.muni.fi.pa165.facade.MonsterFacade;
 import cz.muni.fi.pa165.facade.UserFacade;
 import cz.muni.fi.pa165.web.security.AuthFacade;
@@ -14,13 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.validation.FieldError;
-
-
-import java.util.List;
-import java.lang.Long;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * @author Vojtech Krajnansky
@@ -71,7 +67,7 @@ public class MonsterController {
     public String create(Model model) {
         if (authFacade.hasRole(Role.ADMIN)) {
             model.addAttribute("monster", new MonsterDto());
-            return "monster/new";
+            return "monster/edit";
         } else {
             model.addAttribute("message", "You need to log in, to add monsters.");
             return "error/403";

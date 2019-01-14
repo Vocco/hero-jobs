@@ -49,6 +49,7 @@
         </c:forEach>
         </ol>
     </div>
+    <hero:a href="/monster/all" class="btn btn-info"><f:message key="back"/></hero:a>
 
 </jsp:attribute>
 </hero:template>

@@ -8,7 +8,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <f:message var="title" key="monsters"/>
 
-<monster:template title="${title}">
+<monster:template title="${title}" heading="${title}">
     <jsp:attribute name="body">
     <div class="container">
         <sec:authorize access="hasAuthority('ADMIN')">

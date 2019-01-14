@@ -1,7 +1,6 @@
 package cz.muni.fi.pa165.web.controllers;
 
 import cz.muni.fi.pa165.dto.HeroDto;
-import cz.muni.fi.pa165.dto.UserDto;
 import cz.muni.fi.pa165.facade.HeroFacade;
 import cz.muni.fi.pa165.facade.UserFacade;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * @author Michal Pavuk
@@ -51,7 +49,7 @@ public class HeroController {
         model.addAttribute("hero", hero);
         model.addAttribute("quest", hero.getQuest());
         model.addAttribute("skills", hero.getSkills());
-        model.addAttribute("canEdit", true);
+        model.addAttribute("canEdit", canEdit(hero));
         return "hero/view";
     }
 
@@ -59,7 +57,7 @@ public class HeroController {
     public String create(Model model) {
         if (authFacade.hasRole(Role.ADMIN)) {
             model.addAttribute("hero", new HeroDto());
-            return "hero/new";
+            return "hero/edit";
         } else {
             model.addAttribute("message", "You need to log in, to add heroes.");
             return "error/403";
@@ -73,7 +71,7 @@ public class HeroController {
             model.addAttribute("hero", hero);
             return "hero/edit";
         } else {
-            model.addAttribute("message", "You need to log in, to edit heroes.");
+            model.addAttribute("message", "You don't have permissions to edit this hero.");
             return "error/403";
         }
     }
@@ -99,9 +97,10 @@ public class HeroController {
     }
 
     private boolean canEdit(HeroDto hero) {
-        List<UserDto> users = userFacade.findByHero(hero);
-        return authFacade.isAuthenticated()
-                && (authFacade.hasRole(Role.ADMIN)
-                || users.stream().anyMatch(u -> u.getManagedHero().equals(hero)));
+        if (authFacade.getUsername().equals("anonymousUser")) return false;
+
+        HeroDto allowedHero = userFacade.findByName(authFacade.getUsername()).getManagedHero();
+
+        return authFacade.hasRole(Role.ADMIN) || allowedHero.equals(hero);
     }
 }

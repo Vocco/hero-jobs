@@ -22,7 +22,7 @@ public class Skill implements Serializable {
     private String name;
 
 
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             joinColumns = @JoinColumn(name = "skill_id"),
             inverseJoinColumns = @JoinColumn(name = "affinity_id")
