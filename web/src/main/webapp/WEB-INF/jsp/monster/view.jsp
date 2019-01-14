@@ -27,6 +27,12 @@
             <li>${strength.name} - ${strength.level}</li>
         </c:forEach>
         </ol>
+        <h2><f:message key="heroes.suitable"/></h2>
+        <ol>
+        <c:forEach items="${heroes}" var="pair">
+            <li><monster:a href="/hero/view/${pair.key.id}">${pair.key.name}: ${pair.value}</monster:a></li>
+        </c:forEach>
+        </ol>
     </div>
     <monster:a href="/monster/all" class="btn btn-info"><f:message key="back"/></monster:a>
     <c:if test="${canEdit}">
