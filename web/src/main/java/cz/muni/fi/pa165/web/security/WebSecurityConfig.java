@@ -27,17 +27,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/edit/*").authenticated()
                 .anyRequest().permitAll()
                 .and()
+
                 .formLogin()
-                .loginPage("/login").usernameParameter("username").passwordParameter("password")
-                .defaultSuccessUrl("/", true).failureUrl("/login")
+                .loginPage("/login")
                 .permitAll()
                 .and()
+
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .permitAll()
-                .and()
-                .csrf().disable();
+
+                .and().csrf().disable();
     }
 
     @Override

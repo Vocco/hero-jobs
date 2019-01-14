@@ -76,12 +76,14 @@ public class Monster extends Actor {
     public void addWeakness(Affinity nWeakness){
         if (!weaknesses.contains(nWeakness)){
             weaknesses.add(nWeakness);
+            nWeakness.setMonster(this);
         }
     }
 
 
     public void removeWeakness(Affinity oldWeakness){
         weaknesses.remove(oldWeakness);
+        oldWeakness.setMonster(null);
     }
 
     public void removeAllWeaknesses(){
@@ -95,11 +97,13 @@ public class Monster extends Actor {
     public void addStrength(Affinity nStrength){
         if (!strengths.contains(nStrength)){
             strengths.add(nStrength);
+            nStrength.setMonster(this);
         }
     }
 
     public void removeStrength(Affinity oldStrength){
         strengths.remove(oldStrength);
+        oldStrength.setMonster(null);
     }
 
     public void removeAllStrengths(){
@@ -113,6 +117,7 @@ public class Monster extends Actor {
     public void assignToQuest(QuestMonster questMonster){
         if (!assignedToQuests.contains(questMonster)){
             assignedToQuests.add(questMonster);
+            questMonster.setMonster(this);
         }
     }
 
@@ -143,6 +148,9 @@ public class Monster extends Actor {
     public void setStrengths(List<Affinity> strengths) {
         if ( strengths == null ) throw new IllegalArgumentException("Strengths of monster cannot be null");
         this.strengths = strengths;
+        for (Affinity a : strengths) {
+            a.setMonster(this);
+        }
     }
 
     public List<Affinity> getWeaknesses() {
@@ -152,6 +160,9 @@ public class Monster extends Actor {
     public void setWeaknesses(List<Affinity> weaknesses) {
         if ( weaknesses == null ) throw new IllegalArgumentException("Weaknesses of monster cannot be null");
         this.weaknesses = weaknesses;
+        for (Affinity a : strengths) {
+            a.setMonster(this);
+        }
     }
 
     @Override

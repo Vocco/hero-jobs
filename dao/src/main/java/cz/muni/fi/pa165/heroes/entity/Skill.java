@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class Skill implements Serializable {
     private String name;
 
 
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             joinColumns = @JoinColumn(name = "skill_id"),
             inverseJoinColumns = @JoinColumn(name = "affinity_id")
@@ -58,7 +57,7 @@ public class Skill implements Serializable {
     }
 
     public List<Affinity> getAffinities() {
-        return Collections.unmodifiableList(affinities);
+        return affinities;
     }
 
     public void setAffinities(Affinity... affinities) {

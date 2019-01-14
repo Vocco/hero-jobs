@@ -11,7 +11,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <f:message var="title" key="quests"/>
 
-<quest:template title="${title}">
+<quest:template title="${title}" heading="${title}">
     <jsp:attribute name="body">
     <div class="container">
         <sec:authorize access="hasAuthority('ADMIN')">
@@ -26,21 +26,23 @@
             <thead>
             <tr>
                 <th><f:message key="quest.name"/></th>
-                <th><f:message key="quest.location"/></th>
-                <th><f:message key="quest.reward"/></th>
-                <th><f:message key="quest.heroLimit"/></th>
-                <th><f:message key="quest.state"/></th>
-                <th><f:message key="quest.performanceEvaluation"/></th>
+                <th><span class="glyphicon glyphicon-map-marker"></span>&nbsp;<f:message key="quest.location"/></th>
+                <th><i class="ra ra-fw ra-gem"></i>&nbsp;<f:message key="quest.reward"/></th>
+                <th><i class="ra ra-fw ra-double-team"></i>&nbsp;<f:message key="quest.heroLimit"/></th>
+                <th><i class="ra ra-fw ra-crown"></i>&nbsp;<f:message key="quest.performanceEvaluation"/></th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${quests}" var="quest">
-                <td class="button">
-                    <div style="float: right;">
-                        <quest:a href="/quest/view/${quest.id}"
-                            class="btn btn-info">Show</quest:a>
-                    </div>
-                </td>
+                <tr class="clickable-row" data-href="/quest/view/${quest.id}">
+
+                        <td><quest:a href="/quest/view/${quest.id}"><c:out value="${quest.name}"/></quest:a></td>
+
+                        <td><c:out value="${quest.location}"/></td>
+                	<td><c:out value="${quest.reward}"/></td>
+                	<td><c:out value="${quest.heroLimit}"/></td>
+                	<td><c:out value="${quest.performanceEvaluation}"/></td>
+                    </tr>
             </c:forEach>
             </tbody>
         </table>

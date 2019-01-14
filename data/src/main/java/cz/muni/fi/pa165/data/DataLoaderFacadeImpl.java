@@ -8,8 +8,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 @Component
 @Transactional
@@ -21,6 +27,7 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
     private SkillService skillService;
     private UserService userService;
 
+    private Random random = new Random(1338);
 
     @Inject
     public DataLoaderFacadeImpl(HeroService heroService, MonsterService monsterService, QuestService questService, SkillService skillService, UserService userService) {
@@ -31,10 +38,185 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
         this.userService = userService;
     }
 
+    private int randomRange(int min, int max) {
+        return random.nextInt(max - min) + min;
+    }
+
+    private List<String> affinityNames = Arrays.asList("Earth", "Water", "Fire", "Air", "Light", "Dark");
+
+    private String getDigest(String input) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        md.update(input.getBytes(StandardCharsets.UTF_8));
+        byte[] digest = md.digest();
+
+        return String.format("%064x", new BigInteger(1, digest));
+    }
+
+    private void generateHeroes(int number) throws EntityValidationException {
+        List<String> usedNames = new ArrayList<>();
+        List<String> adjectives = Arrays.asList("Natural", "Liquid", "Fiery", "Etheral", "Divine", "Unholy");
+        List<String> nouns = Arrays.asList("Vine", "Tide", "Flame", "Wind", "Aura", "Curse");
+        List<String> firstNames = Arrays.asList(
+                "Tristan", "Arthur", "Edmund", "Percival", "Ronan", "Thor", "Leon", "Roman", "Adam", "Ferris", "Zephyr", "Gawain", "Perseus", "Cormac", "Odin", "Faramond", "Beowulf",
+                "Aemilia", "Ophelia", "Cordelia", "Portia", "Nerissa", "Bianca", "Rowena", "Circe", "Elysia", "Briar", "Ione", "Amaryllis", "Astoria", "Andromeda", "Cressida", "Atalanta", "Zephyrine", "Vasilisa", "Vesper"
+        );
+        List<String> lastNames = Arrays.asList(
+                "Quintus", "Epicurus", "Meriadoc", "Reliquary", "Galahad", "Zoroaster", "Xanthias", "Eindride", "Leodegrance", "Ophion", "Charlemagne", "Lovejoy", "Gwydion", "Romulus", "Kazimir", "Loxias", "Hafgan",
+                "Ronchelli", "Dunteau", "Choimbert", "Bonnellac", "Estiezac", "Rassier", "Cardainie", "Estiechade", "Guignon", "Gaiveron"
+        );
+
+        for (int i = 0; i < number; i++) {
+            int a = randomRange(0, affinityNames.size());
+            int b = randomRange(0, affinityNames.size());
+            int c = randomRange(0, affinityNames.size());
+            int d = randomRange(0, affinityNames.size());
+            if (a == b) {
+                if (a == 0) {
+                    b = randomRange(1, affinityNames.size());
+                } else if (a == affinityNames.size() - 1) {
+                    b = randomRange(0, affinityNames.size() - 2);
+                }
+            }
+            if (c == d) {
+                if (c == 0) {
+                    d = randomRange(1, affinityNames.size());
+                } else if (c == affinityNames.size() - 1) {
+                    d = randomRange(0, affinityNames.size() - 2);
+                }
+            }
+
+            Affinity a1 = new Affinity(affinityNames.get(a), randomRange(1, 5));
+            Affinity a2 = new Affinity(affinityNames.get(b), randomRange(1, 5));
+            Affinity a3 = new Affinity(affinityNames.get(c), randomRange(1, 5));
+            Affinity a4 = new Affinity(affinityNames.get(d), randomRange(1, 5));
+
+            Skill s1 = new Skill(adjectives.get(a) + " " + nouns.get(b), Arrays.asList(a1, a2), (a1.getLevel() + a2.getLevel()) * 10);
+            Skill s2 = new Skill(adjectives.get(c) + " " + nouns.get(d), Arrays.asList(a3, a4), (a3.getLevel() + a4.getLevel()) * 10);
+            em.persist(s1);
+            em.persist(s2);
+
+            String name;
+            do {
+                a = randomRange(0, firstNames.size());
+                b = randomRange(0, lastNames.size());
+                if (a == b) {
+                    if (a == 0) {
+                        b = randomRange(1, lastNames.size());
+                    } else if (a == firstNames.size()) {
+                        b = randomRange(0, lastNames.size() - 1);
+                    }
+                }
+
+                name = firstNames.get(a) + " " + lastNames.get(b);
+            } while (usedNames.indexOf(name) != -1);
+            usedNames.add(name);
+
+            List<Skill> selected = Arrays.asList(s1, s2);
+            Hero hero = new Hero(name, randomRange(30, 150), randomRange(10, 60), randomRange(100, 3000), randomRange(1, 10), randomRange(1, 10), randomRange(1, 10), selected);
+            hero.setAlive(random.nextBoolean());
+            em.persist(hero);
+
+            User user = new User();
+            String username = name.replace(" ", ".").toLowerCase();
+            user.setUsername(username);
+            user.setEmail(username + "@heroes.example.com");
+            user.setPasswordHash(getDigest(username));
+            user.setManagedHero(hero);
+            em.persist(user);
+
+            if (i % 8 == 0) {
+                em.flush();
+                em.clear();
+            }
+        }
+    }
+
+    private void generateQuests(int number) throws EntityValidationException {
+        List<String> locationAdjectives = Arrays.asList("Holy", "Infernal", "Icy", "Sunny", "The Great", "Rocky", "Misty", "Forbidden");
+        List<String> locationNouns = Arrays.asList("Plains", "Forest", "Swamp", "Jungle", "Taiga", "Mountain", "Village", "Desert", "Temple");
+
+        List<String> monsterAdjectives = Arrays.asList("Crazy", "Confused", "Mysterious", "Dark", "Arcane", "Fast", "Lesser", "Magical", "Exiled", "Restless");
+        List<String> monsterNouns = Arrays.asList("Rat", "Skeleton", "Demon", "Wraith", "Assassin", "Maniac", "Necromancer", "Ogre", "Zombie", "Spirit");
+        List<String> sizes = Arrays.asList("tiny", "small", "medium", "big", "large", "huge", "gigantic");
+
+
+        for (int i = 0; i < number; i++) {
+            int a = randomRange(0, affinityNames.size());
+            int b = randomRange(0, affinityNames.size());
+            int c = randomRange(0, affinityNames.size());
+            int d = randomRange(0, affinityNames.size());
+            if (a == b) {
+                if (a == 0) {
+                    b = randomRange(1, affinityNames.size());
+                } else if (a == affinityNames.size() - 1) {
+                    b = randomRange(0, affinityNames.size() - 2);
+                }
+            }
+            if (c == d) {
+                if (c == 0) {
+                    d = randomRange(1, affinityNames.size());
+                } else if (c == affinityNames.size() - 1) {
+                    d = randomRange(0, affinityNames.size() - 2);
+                }
+            }
+
+            Affinity a1 = new Affinity(affinityNames.get(a), randomRange(1, 5));
+            Affinity a2 = new Affinity(affinityNames.get(b), randomRange(1, 5));
+            Affinity a3 = new Affinity(affinityNames.get(c), randomRange(1, 5));
+            Affinity a4 = new Affinity(affinityNames.get(d), randomRange(1, 5));
+
+            Collections.shuffle(monsterAdjectives);
+            Collections.shuffle(monsterNouns);
+            Collections.shuffle(sizes);
+            String name = monsterAdjectives.get(0) + " " + monsterNouns.get(0);
+            Monster monster = new Monster(name, randomRange(30, 300), randomRange(5, 90), sizes.get(0), Arrays.asList(a1, a2), Arrays.asList(a3, a4));
+            em.persist(monster);
+
+            a = randomRange(0, locationNouns.size());
+            b = randomRange(0, locationAdjectives.size());
+            String location = locationAdjectives.get(b) + " " + locationNouns.get(a);
+
+            String questName;
+            if (random.nextBoolean()) {
+                questName = ((random.nextBoolean()) ? monsterNouns.get(0) + "'s" : monsterAdjectives.get(0)) + " " + locationNouns.get(a);
+            } else {
+                questName = locationAdjectives.get(b) + " " + monsterNouns.get(0) + "s";
+            }
+            Quest quest = new Quest(questName, location, randomRange(100, 2000), randomRange(1, 5));
+            quest.addMonster(monster);
+            em.persist(quest);
+
+            if (i % 8 == 0) {
+                em.flush();
+                em.clear();
+            }
+        }
+
+    }
+
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("development");
+    private EntityManager em = emf.createEntityManager();
 
     @Override
     public void initData() {
         try {
+            // This is used for performance reasons to control when hibernate flushes the persistence context into db
+            em.getTransaction().begin();
+
+            generateHeroes(20);
+            generateQuests(30);
+
+            em.getTransaction().commit();
+            em.close();
+            emf.close();
+
             Skill fireBlast = getFireBlast();
             Skill freeze = getFreeze();
             Skill featherTickle = getFeatherTickle();
@@ -61,7 +243,7 @@ public class DataLoaderFacadeImpl implements DataLoaderFacade {
             User user = getUser(thor);
             User admin = getAdmin();
         } catch (EntityValidationException | EntityNotFoundException e) {
-
+            e.printStackTrace();
         }
     }
 

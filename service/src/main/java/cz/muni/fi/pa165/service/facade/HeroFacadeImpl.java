@@ -13,7 +13,6 @@ import cz.muni.fi.pa165.service.exception.EntityNotFoundException;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.service.interfaces.BeanMappingService;
 import cz.muni.fi.pa165.service.interfaces.HeroService;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,10 +47,10 @@ public class HeroFacadeImpl implements HeroFacade {
     }
 
     @Override
+    @Transactional
     public HeroDto update(HeroDto hero) {
         try {
-            Hero updated = heroService
-                    .update(beanMappingService.mapTo(hero, Hero.class));
+            Hero updated = heroService.update(beanMappingService.mapTo(hero, Hero.class));
 
             return beanMappingService.mapTo(updated, HeroDto.class);
         } catch (EntityValidationException e) {

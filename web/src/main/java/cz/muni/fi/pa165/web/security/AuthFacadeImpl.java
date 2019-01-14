@@ -2,7 +2,6 @@ package cz.muni.fi.pa165.web.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +21,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public boolean hasRole(Role role) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication == null)
             return false;
         return authentication.getAuthorities()

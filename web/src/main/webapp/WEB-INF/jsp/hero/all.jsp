@@ -8,7 +8,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <f:message var="title" key="heroes"/>
 
-<hero:template title="${title}">
+<hero:template title="${title}" heading="${title}">
     <jsp:attribute name="body">
     <div class="container">
         <sec:authorize access="hasAuthority('ADMIN')">
@@ -19,31 +19,31 @@
                     </hero:a>
             </div>
         </sec:authorize>
-        <table class="table">
+        <table class="table" align="center">
             <thead>
             <tr>
                 <th><f:message key="hero.status"/></th>
                 <th><f:message key="hero.name"/></th>
 
-                <th><f:message key="hero.gold"/></th>
-                <th><f:message key="hero.hitpoints"/></th>
-                <th><f:message key="hero.damage"/></th>
+                <th><i class="ra ra-gold-bar ra-fw"></i>&nbsp;<f:message key="hero.gold"/></th>
+                <th><i class="ra ra-health ra-fw"></i>&nbsp;<f:message key="hero.hitpoints"/></th>
+                <th><i class="ra ra-crossed-swords ra-fw"></i>&nbsp;<f:message key="hero.damage"/></th>
 
-                <th><f:message key="hero.might"/></th>
-                <th><f:message key="hero.agility"/></th>
-                <th><f:message key="hero.magic"/></th>
+                <th><i class="ra ra-muscle-up ra-fw"></i>&nbsp;<f:message key="hero.might"/></th>
+                <th><i class="ra ra-player-dodge ra-fw"></i>&nbsp;<f:message key="hero.agility"/></th>
+                <th><i class="ra ra-aura ra-fw"></i>&nbsp;<f:message key="hero.magic"/></th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${heroes}" var="hero">
                     <tr class="clickable-row" data-href="/hero/view/${hero.id}">
                         <c:if test="${hero.alive}">
-                            <td><span class="glyphicon glyphicon-heart"></span></td>
+                            <td><i class="ra ra-hearts ra-fw"></i>&nbsp;<f:message key="hero.alive"/></td>
                         </c:if>
                         <c:if test="${!hero.alive}">
-                            <td><span class="glyphicon glyphicon-exclamation-sign"></span></td>
+                            <td><i class="ra ra-tombstone ra-fw"></i>&nbsp;<f:message key="hero.dead"/></td>
                         </c:if>
-                        <td><c:out value="${hero.getName}"/></td>
+                        <td><hero:a href="/hero/view/${hero.id}"><c:out value="${hero.name}"/></hero:a></td>
 
                         <td><c:out value="${hero.gold}"/></td>
                         <td><c:out value="${hero.hitpoints}"/></td>

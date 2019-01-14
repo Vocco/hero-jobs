@@ -51,7 +51,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public List<UserDto> findByHero(HeroDto hero) {
         try {
-            return beanMappingService.mapTo(userService.findByHero(beanMappingService.mapTo(hero, Hero.class)), UserDto.class);
+            List<User> users = userService.findByHero(beanMappingService.mapTo(hero, Hero.class));
+            return beanMappingService.mapTo(users, UserDto.class);
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return null;

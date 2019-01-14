@@ -1,7 +1,9 @@
 package cz.muni.fi.pa165.web.controllers;
 
 import cz.muni.fi.pa165.dto.QuestDto;
+import cz.muni.fi.pa165.dto.QuestStateDto;
 import cz.muni.fi.pa165.facade.QuestFacade;
+import cz.muni.fi.pa165.heroes.entity.QuestState;
 import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.web.security.AuthFacade;
 import cz.muni.fi.pa165.web.security.Role;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 
 /**
  * @author Metodej Klang
@@ -29,6 +32,18 @@ public class QuestController {
 	@Inject
 	private AuthFacade authFacade;
 
+	private boolean nameErr;
+	private boolean locErr;
+	private boolean rewardErr;
+	private boolean perfErr;
+
+  private QuestStateDto questStateEdited;
+
+    @RequestMapping("/")
+    public String defaultPage() {
+        return "redirect:/quest/all";
+    }
+
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public String allQuests(Model model) {
 		model.addAttribute("quests", questFacade.findAll());
@@ -39,14 +54,15 @@ public class QuestController {
 	public String detail(Model model, @PathVariable long id) {
 		final QuestDto quest = questFacade.findById(id);
 		model.addAttribute("quest", quest);
-		model.addAttribute("editingEnabled", authFacade.hasRole(Role.ADMIN));
+		model.addAttribute("questsize", quest.getMonsters().size());
+		model.addAttribute("canEdit", canEdit(quest));
 		return "quest/view";
 	}
 
 	@RequestMapping("/new")
 	public String create(Model model) {
 		if (authFacade.hasRole(Role.ADMIN)) {
-			model.addAttribute("hero", new QuestDto());
+			model.addAttribute("quest", new QuestDto());
 			return "quest/new";
 		} else {
 			model.addAttribute("message", "You need to log in, to add quests.");
@@ -56,9 +72,13 @@ public class QuestController {
 
 	@RequestMapping("/edit/{id}")
 	public String edit(Model model, @PathVariable long id) {
-		QuestDto hero = questFacade.findById(id);
+		QuestDto quest = questFacade.findById(id);
+
+		questStateEdited = quest.getState();
+		model.addAttribute("queststate", questStateEdited);
+		model.addAttribute("statusOptions", Arrays.stream(QuestState.values()).map(Enum::name).toArray());
 		if (authFacade.hasRole(Role.ADMIN)) {
-			model.addAttribute("hero", hero);
+			model.addAttribute("quest", quest);
 			return "quest/edit";
 		} else {
 			model.addAttribute("message", "You need to log in, to edit quests.");
@@ -67,19 +87,29 @@ public class QuestController {
 	}
 
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public String submit(@ModelAttribute("quest") QuestDto questDto, BindingResult bindingResult) {
+	public String submit(Model model, @ModelAttribute("quest") QuestDto questDto, BindingResult bindingResult) {
 
-		try {
-			validate(questDto);
-		} catch (EntityValidationException e) {
-			return "quest/edit";
+    questDto.setState(questStateEdited);
+
+		nameErr = questDto.getName() == null || questDto.getName().equals("");
+		locErr = questDto.getLocation() == null || questDto.getLocation().equals("");
+		rewardErr = questDto.getReward() < 1;
+		perfErr = questDto.getPerformanceEvaluation() < 0 || questDto.getPerformanceEvaluation() > 5;
+
+		model.addAttribute("nameErr", nameErr);
+		model.addAttribute("locErr", locErr);
+		model.addAttribute("rewardErr", rewardErr);
+		model.addAttribute("perfErr", perfErr);
+
+		if (nameErr || locErr || rewardErr || perfErr) {
+		    return "quest/edit";
 		}
 
 		if (bindingResult.hasErrors()) {
 			return "quest/edit";
 		}
 
-		questFacade.save(questDto);
+		questFacade.update(questDto);
 		return "redirect:/quest/all";
 	}
 
@@ -92,4 +122,9 @@ public class QuestController {
 			throw new EntityValidationException("Quest is not in valid state.");
 		}
 	}
+
+	private boolean canEdit(QuestDto quest) {
+        return authFacade.isAuthenticated()
+                && authFacade.hasRole(Role.ADMIN);
+    }
 }

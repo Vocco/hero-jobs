@@ -1,19 +1,8 @@
 package cz.muni.fi.pa165.heroes.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,7 +59,7 @@ public class Quest implements Serializable {
     @JoinTable(name="quest_deadheroes")
     private List<Hero> deadHeroes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "quest", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<QuestMonster> monsters = new ArrayList<>();
 
 
@@ -106,7 +95,6 @@ public class Quest implements Serializable {
      * @exception IllegalStateException When called on a non-NEW quest.
      */
     public void addHero(Hero hero) {
-        if (state != QuestState.NEW) throw new IllegalStateException("Heroes can only be added to NEW quests");
 
         if (!assignedHeroes.contains(hero)) {
             assignedHeroes.add(hero);
@@ -128,7 +116,6 @@ public class Quest implements Serializable {
      * @exception IllegalStateException When called on a non-NEW quest.
      */
     public void addMonster(Monster monster) {
-        if (state != QuestState.NEW) throw new IllegalStateException("Monsters can only be added to NEW quests");
 
         QuestMonster questMonster = new QuestMonster(this, monster);
 
@@ -151,7 +138,6 @@ public class Quest implements Serializable {
      * @exception IllegalStateException When called on a non-NEW quest.
      */
     public void removeHero(Hero hero) {
-        if (state != QuestState.NEW) throw new IllegalStateException("Heroes can only be removed from NEW quests");
 
         if (assignedHeroes.contains(hero)) {
             assignedHeroes.remove(hero);
@@ -171,7 +157,6 @@ public class Quest implements Serializable {
      * @exception IllegalStateException When called on a non-NEW quest.
      */
     public void removeMonster(Monster monster) {
-        if (state != QuestState.NEW) throw new IllegalStateException("Monsters can only be removed from NEW quests");
 
         for (Iterator<QuestMonster> iter = monsters.iterator(); iter.hasNext(); ) {
             QuestMonster questMonster = iter.next();
@@ -198,7 +183,6 @@ public class Quest implements Serializable {
      * @exception IllegalStateException When called on a non-NEW quest.
      */
     public void start() {
-        if (state != QuestState.NEW) throw new IllegalStateException("Only NEW quests can be started");
         state = QuestState.ONGOING;
     }
 
@@ -218,7 +202,6 @@ public class Quest implements Serializable {
 
     public void setName(String name) {
         if (name == null) throw new IllegalArgumentException("Name of a quest can't be null");
-        if (state != QuestState.NEW) throw new IllegalStateException("Only NEW quests can have their name changed");
         this.name = name;
     }
 
@@ -228,7 +211,6 @@ public class Quest implements Serializable {
 
     public void setLocation(String location) {
         if (location == null) throw new IllegalArgumentException("Location of a quest can't be null");
-        if (state != QuestState.NEW) throw new IllegalStateException("Only NEW quests can have the location changed");
         this.location = location;
     }
 
@@ -238,7 +220,6 @@ public class Quest implements Serializable {
 
     public void setReward(int reward) {
         if (reward <= 0) throw new IllegalArgumentException("Reward of a quest must be a positive integer");
-        if (state != QuestState.NEW) throw new IllegalStateException("Only NEW quests can have their reward changed");
         this.reward = reward;
     }
 
@@ -248,7 +229,6 @@ public class Quest implements Serializable {
 
     public void setHeroLimit(int heroLimit) {
         if (heroLimit <= 0) throw new IllegalArgumentException("HeroLimit of a quest must be a positive integer");
-        if (state != QuestState.NEW) throw new IllegalStateException("Only NEW quests can have their heroLimit changed");
         this.heroLimit = heroLimit;
     }
 
@@ -261,9 +241,6 @@ public class Quest implements Serializable {
     }
 
     public void setPerformanceEvaluation(int performanceEvaluation) {
-        if (state == QuestState.NEW || state == QuestState.ONGOING) {
-            throw new IllegalStateException("Cannot set performance evaluation to NEW or ONGOING quests");
-        }
 
         if (performanceEvaluation < 0 || performanceEvaluation > 10) {
             throw new IllegalArgumentException("Performance evaluation must be an integer between 0 and 10 (incl.)");
@@ -273,15 +250,15 @@ public class Quest implements Serializable {
     }
 
     public List<Hero> getAssignedHeroes() {
-        return Collections.unmodifiableList(assignedHeroes);
+        return assignedHeroes;
     }
 
     public List<Hero> getDeadHeroes() {
-        return Collections.unmodifiableList(deadHeroes);
+        return deadHeroes;
     }
 
     public List<QuestMonster> getMonsters() {
-        return Collections.unmodifiableList(monsters);
+        return monsters;
     }
 
 

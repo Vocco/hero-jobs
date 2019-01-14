@@ -1,9 +1,9 @@
 package cz.muni.fi.pa165.web.controllers;
 
 import cz.muni.fi.pa165.dto.HeroDto;
-import cz.muni.fi.pa165.dto.UserDto;
 import cz.muni.fi.pa165.facade.HeroFacade;
 import cz.muni.fi.pa165.facade.UserFacade;
+import cz.muni.fi.pa165.service.exception.EntityValidationException;
 import cz.muni.fi.pa165.web.security.AuthFacade;
 import cz.muni.fi.pa165.web.security.Role;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * @author Michal Pavuk
@@ -32,6 +31,11 @@ public class HeroController {
 
     @Inject
     private UserFacade userFacade;
+
+    @RequestMapping("/")
+    public String defaultPage() {
+        return "redirect:/hero/all";
+    }
 
     @RequestMapping("/all")
     public String list(Model model) {
@@ -53,7 +57,7 @@ public class HeroController {
     public String create(Model model) {
         if (authFacade.hasRole(Role.ADMIN)) {
             model.addAttribute("hero", new HeroDto());
-            return "hero/new";
+            return "hero/edit";
         } else {
             model.addAttribute("message", "You need to log in, to add heroes.");
             return "error/403";
@@ -67,7 +71,7 @@ public class HeroController {
             model.addAttribute("hero", hero);
             return "hero/edit";
         } else {
-            model.addAttribute("message", "You need to log in, to edit heroes.");
+            model.addAttribute("message", "You don't have permissions to edit this hero.");
             return "error/403";
         }
     }
@@ -81,14 +85,22 @@ public class HeroController {
             return "hero/edit";
         }
 
-        heroFacade.save(hero);
+        heroFacade.update(hero);
         return "redirect:/hero/all";
     }
 
+    private void validate(HeroDto hero) throws EntityValidationException {
+        if (hero == null
+                || hero.getName() == null) {
+            throw new EntityValidationException("Hero is not in valid state.");
+        }
+    }
+
     private boolean canEdit(HeroDto hero) {
-        List<UserDto> users = userFacade.findByHero(hero);
-        return authFacade.isAuthenticated()
-                && (authFacade.hasRole(Role.ADMIN)
-                || users.stream().anyMatch(u -> u.getManagedHero().equals(hero)));
+        if (authFacade.getUsername().equals("anonymousUser")) return false;
+
+        HeroDto allowedHero = userFacade.findByName(authFacade.getUsername()).getManagedHero();
+
+        return authFacade.hasRole(Role.ADMIN) || allowedHero.equals(hero);
     }
 }
