@@ -1,7 +1,9 @@
 package cz.muni.fi.pa165.web.controllers;
 
 import cz.muni.fi.pa165.dto.AffinityDto;
+import cz.muni.fi.pa165.dto.HeroDto;
 import cz.muni.fi.pa165.dto.MonsterDto;
+import cz.muni.fi.pa165.facade.HeroFacade;
 import cz.muni.fi.pa165.facade.MonsterFacade;
 import cz.muni.fi.pa165.facade.UserFacade;
 import cz.muni.fi.pa165.web.security.AuthFacade;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Vojtech Krajnansky
@@ -33,6 +35,9 @@ public class MonsterController {
 
     @Inject
     private UserFacade userFacade;
+
+    @Inject
+    private HeroFacade heroFacade;
 
     List<AffinityDto> weaknessesEdited;
     List<AffinityDto> strengthsEdited;
@@ -60,7 +65,29 @@ public class MonsterController {
         model.addAttribute("strengths", monster.getStrengths());
         model.addAttribute("weaknesses", monster.getWeaknesses());
         model.addAttribute("canEdit", canEdit(monster));
+        model.addAttribute("heroes", getSuitableHeroes(monster));
         return "monster/view";
+    }
+
+    private Map<HeroDto, Integer> getSuitableHeroes(MonsterDto monster) {
+        List<HeroDto> heroesAlive = heroFacade.findAlive();
+        HashMap<HeroDto, Integer> rankings = new HashMap<>();
+        for (HeroDto h : heroesAlive)
+            rankings.put(h, heroFacade.rateAgainstMonsterType(h, monster));
+
+        return sortByValue(rankings);
+    }
+
+    private static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
     }
 
     @RequestMapping("/new")
